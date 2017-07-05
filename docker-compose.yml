@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+    rabbit:
+        build: ./containers/rabbit-mqtt
+        expose:
+            - 15672
+            - 5672
+            - 1883
+        volumes:
+            - /tmp/docker/rabbit:/tmp/docker/rabbit
+        ports:
+            - 15672
+            - 1883:1883
+    prepros:
+        image: ubuntu
+        links:
+            - rabbit
+        environment:
+            - RABBIT_URL="rabbit:5672"
