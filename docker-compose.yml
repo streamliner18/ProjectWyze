@@ -1,9 +1,11 @@
 version: '3.3'
 
 services:
+    mongo:
+        build: ./mongo-db
     rabbit:
-        build: ./containers/rabbit-mqtt
-        expose:
+        build: ./rabbit-mqtt
+        ports:
             - 15672
             - 5672
             - 1883
@@ -12,9 +14,10 @@ services:
         ports:
             - 15672
             - 1883:1883
-    prepros:
-        image: ubuntu
+    demux:
+        build: ./mqtt-demux
         links:
             - rabbit
+            - mongo
         environment:
             - RABBIT_URL="rabbit:5672"

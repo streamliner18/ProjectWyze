@@ -1,6 +1,6 @@
 FROM rabbitmq:latest
 
-MAINTAINER A Streamliner Production
+MAINTAINER Project Wyze Team
 
 RUN rabbitmq-plugins enable --offline rabbitmq_management
 RUN rabbitmq-plugins enable --offline rabbitmq_mqtt

@@ -1,6 +1,6 @@
 FROM skiftcreative/supervisor
 
-MAINTAINER A Streamliner Production
+MAINTAINER Project Wyze Team
 
 ENV BUILD_DIR=/tmp/build/
 ENV APP_DIR=/var/app
