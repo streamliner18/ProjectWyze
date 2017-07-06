@@ -1,23 +1,17 @@
 version: '3.3'
 
 services:
-    mongo:
-        build: ./mongo-db
     rabbit:
         build: ./rabbit-mqtt
         ports:
-            - 15672
-            - 5672
-            - 1883
+            - "15672:15672"
+            - "5672:5672"
+            - "1883:1883"
         volumes:
             - /tmp/docker/rabbit:/tmp/docker/rabbit
-        ports:
-            - 15672
-            - 1883:1883
-    demux:
-        build: ./mqtt-demux
+    prepros:
+        build: ./pre-processor
         links:
             - rabbit
-            - mongo
         environment:
-            - RABBIT_URL="rabbit:5672"
+            - BROKER_ADDRESS=rabbit
