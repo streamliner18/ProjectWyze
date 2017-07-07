@@ -3,7 +3,7 @@ from processing import mqtt_cb, amqp_cb
 from os import environ
 from pika import exceptions
 from pika.adapters import twisted_connection
-from twisted.internet import defer, reactor, protocol,task
+from twisted.internet import defer, reactor, protocol, task
 
 print("Configuring RabbitMQ connection...")
 

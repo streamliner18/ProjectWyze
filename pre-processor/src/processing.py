@@ -10,7 +10,7 @@ def to_json(body):
         body = json.loads(body)
         assert isinstance(body, dict)
         return body
-    except:
+    except Exception:
         if isinstance(body, bytes):
             body = body.decode()
         return {"value": str(body)}
