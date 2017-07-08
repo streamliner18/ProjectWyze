@@ -2,5 +2,5 @@
   "name": "Aside",
   "version": "0.0.0",
   "private": true,
-  "main": "./Aside.js"
+  "main": "./Aside.jsx"
 }
