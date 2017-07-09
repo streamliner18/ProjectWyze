@@ -5,17 +5,14 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    MONGO_URI = 'mongo'
-    MONGO_DBNAME = 'wyze'
+    MONGO_URI = 'mongodb://mongo:27017/wyze'
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URI = 'localhost'
-    MONGO_DBNAME = 'wyze-dev'
+    MONGO_URI = 'mongodb://localhost:27017/wyze-dev'
 
 
 class TestingConfig(Config):
     TESTING = True
-    MONGO_URI = 'localhost'
-    MONGO_DBNAME = 'wyze-test'
+    MONGO_URI = 'mongodb://localhost:27017/wyze-test'
