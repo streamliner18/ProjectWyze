@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from app import app
+from config import DevelopmentConfig
+from flask import render_template
 from api import mqdevices
-
-app = Flask(__name__)
 
 
 @app.route('/')
@@ -14,4 +14,5 @@ app.register_blueprint(mqdevices.blueprint)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.config.from_object(DevelopmentConfig)
+    app.run()
