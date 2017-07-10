@@ -17,9 +17,9 @@ Note that we have only tested on Docker versions 17+ (Community Edition). Old ve
 In addition to Docker, note that the `mgnt-console` does need compilation if you decide to deploy from the source. To compile it, you need `node.js 6+` with `npm 3`. First `cd` to the `mgnt-console` folder, and run:
 
 ```bash
-cd src/frontend
+cd src/app/frontend
 npm i
-sh ../../utils/deploy.sh
+sh ../../../utils/deploy.sh
 ```
 
 After which you are all set for a full-fledged deployment.
