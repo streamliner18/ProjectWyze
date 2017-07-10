@@ -39,6 +39,7 @@ def create_user():
             role='admin' if request.form.get('admin', 0) else 'user'
         )
         assert res
+        return res.inserted_id
     except Exception as e:
         return jsonify(states='error', result=e.__repr__())
 
