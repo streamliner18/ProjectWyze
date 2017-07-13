@@ -1,6 +1,6 @@
 import history from '../history'
 
-function routes (state = {}, action) {
+export default (state = {}, action) => {
   switch (action.type) {
     case 'ROUTE_JUMP':
       history.push(action.to)
@@ -9,5 +9,3 @@ function routes (state = {}, action) {
       return {}
   }
 }
-
-export default routes
