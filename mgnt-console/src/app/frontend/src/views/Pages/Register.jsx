@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Register extends Component {
+export class Register extends Component {
   render () {
     return (
       <div className='app flex-row align-items-center'>
@@ -47,5 +47,3 @@ class Register extends Component {
     )
   }
 }
-
-export default Register

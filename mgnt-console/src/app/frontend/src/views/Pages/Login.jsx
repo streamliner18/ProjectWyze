@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'reactstrap'
-import store from '../../../redux/store'
+import store from '../../redux/store'
 
 class LoginForm extends Component {
   constructor (props) {
@@ -49,7 +49,7 @@ class LoginForm extends Component {
   }
 }
 
-class Login extends Component {
+export class Login extends Component {
   render () {
     return (
       <div className='app flex-row align-items-center'>
@@ -79,5 +79,3 @@ class Login extends Component {
     )
   }
 }
-
-export default Login

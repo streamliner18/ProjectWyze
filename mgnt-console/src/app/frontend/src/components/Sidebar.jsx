@@ -13,7 +13,7 @@ class SideNavLink extends Component {
   }
 }
 
-class Sidebar extends Component {
+export class Sidebar extends Component {
   handleClick (e) {
     e.preventDefault()
     e.target.parentElement.classList.toggle('open')
@@ -48,5 +48,3 @@ class Sidebar extends Component {
     )
   }
 }
-
-export default Sidebar

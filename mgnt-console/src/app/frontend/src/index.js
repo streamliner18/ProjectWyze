@@ -4,23 +4,14 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import history from './history'
 import store from './redux/store'
 import { Provider, connect } from 'react-redux'
-
-// Containers
-import Full from './containers/Full/'
-
-// views
-import Login from './views/Pages/Login/'
-import Register from './views/Pages/Register/'
-import Page404 from './views/Pages/Page404/'
-import Page500 from './views/Pages/Page500/'
+import { Full } from './containers/_all'
+import { Login, Register, Page404, Page500 } from './views/Pages/_all'
 
 function loggedIn () {
   return store.getState().auth.token
 }
 
 function renderMain (props) {
-  console.log(props);
-
   if (!loggedIn()) {
     return <Redirect to='/login' />
   } else {

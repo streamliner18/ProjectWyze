@@ -1,5 +1,4 @@
-const routes = {
+export default {
   '/': 'Home',
   '/dashboard': 'Dashboard'
 }
-export default routes

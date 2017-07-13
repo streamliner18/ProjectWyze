@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 
-class Aside extends Component {
+export class Aside extends Component {
   render () {
     return (
       <aside className='aside-menu'>
@@ -10,5 +10,3 @@ class Aside extends Component {
     )
   }
 }
-
-export default Aside

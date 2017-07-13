@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Page500 extends Component {
+export class Page500 extends Component {
   render () {
     return (
       <div className='app flex-row align-items-center'>
@@ -26,5 +26,3 @@ class Page500 extends Component {
     )
   }
 }
-
-export default Page500

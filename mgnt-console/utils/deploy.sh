@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Building frontend..."
-cd src/app/frontend
+cd ../src/app/frontend
 gulp sass
 npm run build
 cd ..
