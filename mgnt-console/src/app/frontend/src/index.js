@@ -6,6 +6,7 @@ import store from './redux/store'
 import { Provider, connect } from 'react-redux'
 import { Full } from './containers/'
 import { Login, Register, Page404, Page500 } from './views/pages/'
+import cookies from './cookies'
 
 window.store = store
 

@@ -3,7 +3,8 @@ import { Container, Row, Col, InputGroup, InputGroupAddon, Button, Input, CardGr
 import { IconSL } from '../../components/'
 import store from '../../redux/store'
 import { authHeader } from '../../redux/auth'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import cookies from '../../cookies'
 
 class LoginForm extends Component {
   constructor (props) {
@@ -32,6 +33,18 @@ class LoginForm extends Component {
   }
 
   render () {
+    let token = cookies.get('auth-token')
+    console.log('Loaded token: ', token)
+    if (token) {
+      store.dispatch({
+        type: 'AUTH_LOGIN',
+        token: token
+      })
+      store.dispatch({
+        type: 'ROUTE_JUMP',
+        to: '/'
+      })
+    }
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
         <h1>What's up</h1>

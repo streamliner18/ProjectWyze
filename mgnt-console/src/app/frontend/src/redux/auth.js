@@ -1,5 +1,5 @@
 import base64 from 'base-64'
-import store from './store'
+import cookies from '../cookies'
 
 export const authHeader = (username, password) => {
   let headers = new Headers()
@@ -11,6 +11,7 @@ export default (state = {}, action) => {
   switch (action.type) {
     case 'AUTH_LOGIN':
       console.log('[STORE] Login processed', action)
+      if (action.token) cookies.set('auth-token', action.token)
       return action.token
         ? Object.assign({}, state, {token: action.token})
         : state
@@ -18,6 +19,7 @@ export default (state = {}, action) => {
     case 'AUTH_LOGOUT':
       var res = Object.assign({}, state)
       res.token = undefined
+      cookies.remove('auth-token')
       return res
 
     default:
