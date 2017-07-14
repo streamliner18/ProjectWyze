@@ -14,7 +14,6 @@ class Application extends Component {
     super(props)
     this.getToken = this.getToken.bind(this)
     this.renderMain = this.renderMain.bind(this)
-    this.renderLogin = this.renderLogin.bind(this)
   }
 
   getToken () {
@@ -23,10 +22,6 @@ class Application extends Component {
 
   renderMain (props) {
     return this.getToken() ? <Full {...props} /> : <Redirect to='/login' />
-  }
-
-  renderLogin (props) {
-    return this.getToken() ? <Redirect to='/' /> : <Login {...props} />
   }
 
   render () {
