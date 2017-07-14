@@ -4,8 +4,8 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import history from './history'
 import store from './redux/store'
 import { Provider, connect } from 'react-redux'
-import { Full } from './containers/_all'
-import { Login, Register, Page404, Page500 } from './views/Pages/_all'
+import { Full } from './containers/'
+import { Login, Register, Page404, Page500 } from './views/pages/'
 
 function loggedIn () {
   return store.getState().auth.token

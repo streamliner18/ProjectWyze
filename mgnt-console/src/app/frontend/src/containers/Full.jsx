@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
 
-import { Header, Sidebar, Breadcrumb, Aside, Footer } from '../components/_all'
+import { Header, Sidebar, Breadcrumb, Aside, Footer } from '../components/'
 import Dashboard from '../views/Dashboard'
 
 export class Full extends Component {
