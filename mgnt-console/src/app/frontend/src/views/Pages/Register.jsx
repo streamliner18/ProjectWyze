@@ -1,48 +1,75 @@
 import React, { Component } from 'react'
+import { Container, Row, InputGroup, InputGroupAddon, Button, Input, Card, CardBlock, Form } from 'reactstrap'
+import { IconSL } from '../../components/'
+
+class RegisterForm extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {inv: '', pwd: '', rpwd: '', email: ''}
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.submitEligible = this.submitEligible.bind(this)
+    this.checkPassword = this.checkPassword.bind(this)
+  }
+
+  handleSubmit (e) {
+    e.preventDefault()
+    console.log('Registering', this.state)
+  }
+
+  submitEligible () {
+    return (
+      (this.state.inv) && (this.state.email) &&
+      (this.state.pwd) &&
+      (this.state.pwd === this.state.rpwd)
+    )
+  }
+
+  checkPassword () {
+    return (this.state.pwd === this.state.rpwd)
+  }
+
+  render () {
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <InputGroup className='mb-3'>
+          <InputGroupAddon><IconSL i='user' /></InputGroupAddon>
+          <Input type='text' placeholder='Invitation Code' onChange={e => this.setState({inv: e.target.value})} />
+        </InputGroup>
+        <InputGroup className='mb-3'>
+          <InputGroupAddon>@</InputGroupAddon>
+          <Input type='text' placeholder='Email' onChange={e => this.setState({email: e.target.value})} />
+        </InputGroup>
+        <InputGroup className={(this.state.pwd ? (this.checkPassword() ? 'has-success' : 'has-danger') : '') + ' mb-3'}>
+          <InputGroupAddon><IconSL i='lock' /></InputGroupAddon>
+          <Input type='password' placeholder='Password' onChange={e => this.setState({pwd: e.target.value})} state={this.checkPassword()} />
+        </InputGroup>
+        <InputGroup className={(this.state.pwd ? (this.checkPassword() ? 'has-success' : 'has-danger') : '') + ' mb-3'}>
+          <InputGroupAddon><IconSL i='lock' /></InputGroupAddon>
+          <Input type='password' placeholder='Repeat Password' onChange={e => this.setState({rpwd: e.target.value})} state={this.state.pwd ? (this.checkPassword() ? 'success' : 'danger') : ''} />
+        </InputGroup>
+        <Button type='submit' color='success' block disabled={!this.submitEligible()}>Create Account</Button>
+      </Form>
+    )
+  }
+}
 
 export class Register extends Component {
   render () {
     return (
       <div className='app flex-row align-items-center'>
-        <div className='container'>
-          <div className='row justify-content-center'>
+        <Container>
+          <Row className='justify-content-center'>
             <div className='col-md-6'>
-              <div className='card mx-4'>
-                <div className='card-block p-4'>
+              <Card className='card mx-4'>
+                <CardBlock className='card-block p-4'>
                   <h1>Register</h1>
                   <p className='text-muted'>Create your account</p>
-                  <div className='input-group mb-3'>
-                    <span className='input-group-addon'><i className='icon-user' /></span>
-                    <input type='text' className='form-control' placeholder='Username' />
-                  </div>
-                  <div className='input-group mb-3'>
-                    <span className='input-group-addon'>@</span>
-                    <input type='text' className='form-control' placeholder='Email' />
-                  </div>
-                  <div className='input-group mb-3'>
-                    <span className='input-group-addon'><i className='icon-lock' /></span>
-                    <input type='password' className='form-control' placeholder='Password' />
-                  </div>
-                  <div className='input-group mb-4'>
-                    <span className='input-group-addon'><i className='icon-lock' /></span>
-                    <input type='password' className='form-control' placeholder='Repeat password' />
-                  </div>
-                  <button type='button' className='btn btn-block btn-success'>Create Account</button>
-                </div>
-                <div className='card-footer p-4'>
-                  <div className='row'>
-                    <div className='col-6'>
-                      <button className='btn btn-block btn-facebook' type='button'><span>facebook</span></button>
-                    </div>
-                    <div className='col-6'>
-                      <button className='btn btn-block btn-twitter' type='button'><span>twitter</span></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <RegisterForm />
+                </CardBlock>
+              </Card>
             </div>
-          </div>
-        </div>
+          </Row>
+        </Container>
       </div>
     )
   }

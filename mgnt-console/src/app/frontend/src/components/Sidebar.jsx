@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-class SideNavLink extends Component {
-  render () {
-    return (
-      <li className='nav-item'>
-        <NavLink to={this.props.to} className='nav-link' activeClassName='active'>
-          <i className={'icon-' + this.props.icon} /> {this.props.title}
-        </NavLink>
-      </li>
-    )
-  }
-}
+const SideNavLink = (props) => (
+  <li className='nav-item'>
+    <NavLink to={props.to} className='nav-link' activeClassName='active'>
+      <i className={'icon-' + props.icon} /> {props.title}
+    </NavLink>
+  </li>
+)
 
 export class Sidebar extends Component {
   handleClick (e) {
