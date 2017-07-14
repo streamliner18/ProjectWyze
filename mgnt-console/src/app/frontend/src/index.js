@@ -7,14 +7,28 @@ import { Provider, connect } from 'react-redux'
 import { Full } from './containers/'
 import { Login, Register, Page404, Page500 } from './views/pages/'
 
-const loggedIn = () => store.getState().auth.token
-
-const renderMain = (props) =>
-  loggedIn() ? <Full {...props} /> : <Redirect to='/login' />
-
 window.store = store
 
 class Application extends Component {
+  constructor (props) {
+    super(props)
+    this.getToken = this.getToken.bind(this)
+    this.renderMain = this.renderMain.bind(this)
+    this.renderLogin = this.renderLogin.bind(this)
+  }
+
+  getToken () {
+    return this.props.token
+  }
+
+  renderMain (props) {
+    return this.getToken() ? <Full {...props} /> : <Redirect to='/login' />
+  }
+
+  renderLogin (props) {
+    return this.getToken() ? <Redirect to='/' /> : <Login {...props} />
+  }
+
   render () {
     return (
       <Router history={history}>
@@ -23,7 +37,7 @@ class Application extends Component {
           <Route exact path='/register' name='Register Page' component={Register} />
           <Route exact path='/404' name='Page 404' component={Page404} />
           <Route exact path='/500' name='Page 500' component={Page500} />
-          <Route path='/' name='Home' render={renderMain} />
+          <Route path='/' name='Home' render={this.renderMain} token={this.props.token} />
         </Switch>
       </Router>
     )

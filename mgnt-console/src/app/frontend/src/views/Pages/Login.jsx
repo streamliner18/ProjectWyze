@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Container, Row, Col, InputGroup, InputGroupAddon, Button, Input, CardGroup, Card, CardBlock } from 'reactstrap'
 import { IconSL } from '../../components/'
 import store from '../../redux/store'
+import { authHeader } from '../../redux/auth'
+import { Link } from 'react-router-dom'
 
 class LoginForm extends Component {
   constructor (props) {
@@ -13,15 +15,20 @@ class LoginForm extends Component {
   handleSubmit (e) {
     e.preventDefault()
     console.log('Logging in')
-    let unsubscribe = store.subscribe(
-      () => console.log(store.getState())
-    )
-    store.dispatch({
-      type: 'AUTH_LOGIN',
-      username: this.state.username,
-      password: this.state.password
+    fetch('/api/auth/login', {headers: authHeader(this.state.username, this.state.password)})
+    .then(res => res.json())
+    .then(json => {
+      store.dispatch({
+        type: 'AUTH_LOGIN',
+        status: 'success',
+        token: json.token
+      })
+      store.dispatch({
+        type: 'ROUTE_JUMP',
+        to: '/'
+      })
     })
-    unsubscribe()
+    .catch(e => console.log('Login failed', e))
   }
 
   render () {
@@ -68,7 +75,9 @@ export class Login extends Component {
                     <div>
                       <h2>Not a user?</h2>
                       <p>Try out the simplest way to build your next IoT home, rocket control center or hedge fund without worrying about big data infrastructure. Everything is free of charge.</p>
-                      <Button color='primary' active className='mt-3'>Register Now!</Button>
+                      <Link to='/register'>
+                          <Button color='primary' active className='mt-3'>Register Now!</Button>
+                      </Link>
                     </div>
                   </CardBlock>
                 </Card>

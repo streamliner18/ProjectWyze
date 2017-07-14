@@ -15,6 +15,7 @@ def get_token():
 
 @blueprint.route('/register', methods=['POST'])
 def register():
+    print(request.form)
     invitation = request.form.get('invitation')
     email = request.form.get('email')
     password = request.form.get('password')

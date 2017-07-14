@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
-import { Container, Row, InputGroup, InputGroupAddon, Button, Input, Card, CardBlock, Form } from 'reactstrap'
+import { Container, Row, InputGroup, InputGroupAddon, Button, Input, Card, CardBlock, Form, Alert } from 'reactstrap'
 import { IconSL } from '../../components/'
+import history from '../../history'
+
+const StateAlert = (props) =>
+  props.status === 'error'
+    ? <Alert color='warning'>Invalid invitation or email address already registered. Check again.</Alert>
+    : null
 
 class RegisterForm extends Component {
   constructor (props) {
     super(props)
-    this.state = {inv: '', pwd: '', rpwd: '', email: ''}
+    this.state = {inv: '', pwd: '', rpwd: '', email: '', status: ''}
     this.handleSubmit = this.handleSubmit.bind(this)
     this.submitEligible = this.submitEligible.bind(this)
     this.checkPassword = this.checkPassword.bind(this)
@@ -13,7 +19,20 @@ class RegisterForm extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    console.log('Registering', this.state)
+    this.state.status = ''
+    let {inv: invitation, email, pwd: password} = this.state
+    let data = new FormData()
+    data.append('invitation', invitation)
+    data.append('email', email)
+    data.append('password', password)
+    fetch('/api/auth/register', {
+      method: 'POST',
+      body: data
+    }).then(res => res.json())
+    .then(json => {
+      if (json.status === 'ok') history.push('/login')
+        else this.setState({status: 'error'})
+    })
   }
 
   submitEligible () {
@@ -31,6 +50,7 @@ class RegisterForm extends Component {
   render () {
     return (
       <Form onSubmit={this.handleSubmit}>
+        <StateAlert status={this.state.status} />
         <InputGroup className='mb-3'>
           <InputGroupAddon><IconSL i='user' /></InputGroupAddon>
           <Input type='text' placeholder='Invitation Code' onChange={e => this.setState({inv: e.target.value})} />
