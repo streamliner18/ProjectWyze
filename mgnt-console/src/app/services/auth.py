@@ -8,7 +8,10 @@ def user_register(invitation, email, password):
     invitation = users.find_one({
         "invite_id": invitation
     })
-    if invitation and 'email' not in invitation:
+    prev_user = users.find_one({
+        "email": email
+    })
+    if invitation and prev_user is None and 'email' not in invitation:
         invitation['email'] = email
         invitation['pwhash'] = app_bcrypt.generate_password_hash(password)
         invitation['enabled'] = True
