@@ -50,7 +50,7 @@ export class Header extends Component {
         <a className='navbar-brand' href='#' />
         <ul className='nav navbar-nav d-md-down-none mr-auto'>
           <li className='nav-item'>
-            <button className='nav-link navbar-toggler sidebar-toggler' type='button' onClick={this.sidebarToggle}>&#9776</button>
+            <button className='nav-link navbar-toggler sidebar-toggler' type='button' onClick={this.sidebarToggle}>&#9776;</button>
           </li>
         </ul>
         <ul className='nav navbar-nav ml-auto'>

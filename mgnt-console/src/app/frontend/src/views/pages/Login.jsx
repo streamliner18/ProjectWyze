@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 class LoginForm extends Component {
   constructor (props) {
     super(props)
-    this.state = {username: '', password: ''}
+    this.state = {username: '', password: '', status: ''}
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
@@ -28,19 +28,19 @@ class LoginForm extends Component {
         to: '/'
       })
     })
-    .catch(e => console.log('Login failed', e))
+    .catch(e => this.setState({status: 'error', password: ''}))
   }
 
   render () {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
         <h1>What's up</h1>
-        <p className='text-muted'>Welcome to Project Wyze</p>
+        <p className='text-muted'>{(this.state.status === 'error') ? 'No sweat, double check your password' : 'Welcome to Project Wyze'}</p>
         <InputGroup className='mb-3'>
           <InputGroupAddon>@</InputGroupAddon>
           <input type='text' className='form-control' placeholder='Email' value={this.state.username} onChange={e => this.setState({username: e.target.value})} />
         </InputGroup>
-        <InputGroup className='mb-4'>
+        <InputGroup className={'mb-4' + ((this.state.status === 'error') ? '  has-danger' : '')}>
           <InputGroupAddon><IconSL i='lock' /></InputGroupAddon>
           <Input type='password' placeholder='Password' value={this.state.password} onChange={e => this.setState({password: e.target.value})} />
         </InputGroup>
