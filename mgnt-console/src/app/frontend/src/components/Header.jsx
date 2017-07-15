@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Dropdown, DropdownMenu, DropdownItem } from 'reactstrap'
+import { Link } from 'react-router-dom'
 import { IconFA } from './Icons'
 import store from '../redux/store'
 
@@ -66,7 +67,9 @@ export class Header extends Component {
                 <DropdownItem><IconFA i='bell-o' /> Updates<span className='badge badge-info'>42</span></DropdownItem>
 
                 <DropdownItem header className='text-center'><strong>Settings</strong></DropdownItem>
-                <DropdownItem><IconFA i='user' /> Profile</DropdownItem>
+                <Link to='/profile'>
+                  <DropdownItem><IconFA i='user' /> Profile</DropdownItem>
+                </Link>
                 <DropdownItem onClick={this.handleLogout}><IconFA i='lock' /> Logout</DropdownItem>
               </DropdownMenu>
             </Dropdown>

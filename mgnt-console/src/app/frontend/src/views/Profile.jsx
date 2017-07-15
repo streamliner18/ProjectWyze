@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-export class Dashboard extends Component {
+export class Profile extends Component {
   render () {
     return (
       <div className='animated fadeIn'>
-        Goodbye World
+        <h1>My Account</h1>
       </div>
     )
   }
