@@ -215,7 +215,7 @@ class LambdaStats extends Component {
       <Col md='6'>
         <Card>
           <CardHeader>
-            Device Report Rates
+            Lambda Execution Rates
           </CardHeader>
           <CardBlock>
             <Row>
