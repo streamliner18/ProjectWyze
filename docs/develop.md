@@ -32,7 +32,7 @@ input = status
 output = command
 ```
 
-An ingress message `[mesh/b5ea3f/42/M/status] 255` will enter the system as `[bedroom.light.brightness] 255`. Similarly, an egress message turning off the light `[bedroom.light.brightness] {"value": 0}` will be sent to the MQTT broker as `[mesh/b5ea3f/42/M/command] {"value":0}`.
+An ingress message `[mesh/b5ea3f/42/M/status] 255` will enter the system as `[bedroom.light.brightness] 255`. Similarly, an egress message turning off the light `[bedroom.light.brightness.output] {"value": 0}` will be sent to the MQTT broker as `[mesh/b5ea3f/42/M/command] {"value":0}`.
 
 #### `pre-processor`: Preprocessor
 
