@@ -134,7 +134,7 @@ export class LambdaEdit extends Component {
                         </InputGroup>
                       </FormGroup>
                       <FormGroup row>
-                        <Label sm='2'> # of workers</Label>
+                        <Label sm='2'> # workers</Label>
                         <Col sm='1'>
                           <Input type='number' name='workers' value={this.state.data.workers} onChange={this.onChange} />
                         </Col>
@@ -237,16 +237,16 @@ export class LambdaEdit extends Component {
               transitionLeaveTimeout={300}
             >
               {this.state.data.remarks
-                ? <LambdaStatCard title={this.state.data.remarks} value='Compiler Warning' color='danger' icon='ban' /> : null
+                ? <LambdaStatCard title='Runtime Error: Check log' value='Compiler Warning' color='danger' icon='ban' /> : null
               }
               {this.state.data.bind_multithread
-                ? <LambdaStatCard title='may cause duplicate input messages' value='Multithreaded Bindings' icon='organization' color='warning' /> : null
+                ? <LambdaStatCard title='Bindings no longer combined' value='Handle duplicates' icon='organization' color='warning' /> : null
               }
               {this.state.data.durable
-                ? <LambdaStatCard title='Remains active despite runtime errors' icon='ghost' value='Caveat: Durable Lambda' color='warning' /> : null
+                ? <LambdaStatCard title='Keeps running after errors' icon='ghost' value='Runtime protection OFF' color='warning' /> : null
               }
               {this.state.data.recursive
-                ? <LambdaStatCard title='Do not write to your binding topics' icon='reload' value='Caveat: May cause dead loop' color='warning' /> : null
+                ? <LambdaStatCard title='No output to binded topics' icon='reload' value='May cause dead loop' color='warning' /> : null
               }
             </ReactCSSTransitionGroup>
             <Card>
