@@ -3,7 +3,7 @@ import { Container, Row, Col, InputGroup, InputGroupAddon, Button, Input, CardGr
 import { IconSL } from '../../components/'
 import store from '../../redux/store'
 import { authHeader } from '../../redux/auth'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import cookies from '../../cookies'
 
 class LoginForm extends Component {

@@ -6,5 +6,8 @@ export default {
   '/mqtt-devices': 'MQTT Devices',
   '/lambdas': 'Lambdas',
   '/team': 'Team',
-  '/profile': 'My Account'
+  '/profile': 'My Account',
+  '/lambdas/edit': 'Edit Lambda',
+  '/mqtt-template': 'Edit Template',
+  '/mqtt-device': 'Edit device'
 }

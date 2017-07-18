@@ -18,6 +18,15 @@ class Application extends Component {
   }
 
   getToken () {
+    let token = cookies.get('auth-token')
+    if (token) {
+      console.log('Loaded token: ', token)
+      store.dispatch({
+        type: 'AUTH_LOGIN',
+        token: token
+      })
+      return token
+    }
     return this.props.token
   }
 

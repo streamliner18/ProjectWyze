@@ -19,7 +19,7 @@ class RegisterForm extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    this.state.status = ''
+    this.setState({status: ''})
     let {inv: invitation, email, pwd: password} = this.state
     let data = new FormData()
     data.append('invitation', invitation)
