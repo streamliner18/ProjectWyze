@@ -40,7 +40,14 @@ export class LambdaEdit extends Component {
       data: {},
       activeTab: '1',
       modified: false,
-      updating: false
+      updating: false,
+      aceConfig: {
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: false,
+        enableSnippets: false,
+        showLineNumbers: true,
+        tabSize: 2
+      }
     }
     this.reload = this.reload.bind(this)
     this.toggle = this.toggle.bind(this)
@@ -212,6 +219,7 @@ export class LambdaEdit extends Component {
                   width='100%'
                   height='600px'
                   editorProps={{$blockScrolling: true}}
+                  setOptions={this.state.aceConfig}
                 />
               </TabPane>
               <TabPane tabId='2'>
