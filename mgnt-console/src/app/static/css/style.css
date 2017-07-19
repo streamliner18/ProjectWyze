@@ -7549,15 +7549,15 @@ base-chart.chart {
   border-bottom: 1px solid #cfd8dc; }
   .app-header.navbar .navbar-brand {
     display: inline-block;
-    width: 155px;
+    width: 225px;
     height: 55px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 15px;
     margin-right: 0;
     background-color: #fff;
     background-image: url("../img/logo.png");
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 70px auto;
+    background-size: 200px auto;
     border-bottom: 1px solid #cfd8dc; }
   .app-header.navbar .navbar-nav {
     flex-direction: row;
@@ -8921,3 +8921,21 @@ hr.transparent {
     border-right-color: #f86c6b; }
   *[dir="rtl"] .callout-success {
     border-right-color: #4dbd74; }
+
+.collapse200-enter {
+  opacity: 0.01;
+  max-height: 0; }
+
+.collapse200-enter.collapse200-enter-active {
+  opacity: 1;
+  max-height: 200px;
+  transition: opacity 0.3s ease-out, max-height 0.3s ease-out; }
+
+.collapse200-leave {
+  opacity: 1;
+  max-height: 200px; }
+
+.collapse200-leave.collapse200-leave-active {
+  max-height: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-out, max-height 0.3s ease-out; }

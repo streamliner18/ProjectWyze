@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-
 import { Header, Sidebar, Breadcrumb, Aside, Footer } from '../components/'
-import { Dashboard, Preprocessor, MQTemplates, MQDevices, Lambdas, Team, Profile, LambdaEdit } from '../views/'
+import { Dashboard, Preprocessor, MQTemplates, MQDevices, Lambdas, Team, Profile } from '../views/'
+import { LambdaEdit } from '../views'
 
 export class Full extends Component {
   render () {

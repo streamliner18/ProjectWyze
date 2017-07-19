@@ -58,7 +58,7 @@ export class Header extends Component {
           <li className='nav-item'>
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
               <button onClick={this.toggle} className='nav-link dropdown-toggle' data-toggle='dropdown' type='button' aria-haspopup='true' aria-expanded={this.state.dropdownOpen}>
-                <img src={'img/avatars/7.jpg'} className='img-avatar' alt='admin@bootstrapmaster.com' />
+                <img src={'/static/img/avatars/7.jpg'} className='img-avatar' alt='admin@bootstrapmaster.com' />
                 <span className='d-md-down-none'>admin</span>
               </button>
 

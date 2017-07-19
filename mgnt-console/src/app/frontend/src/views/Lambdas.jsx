@@ -4,7 +4,7 @@ import { IconSL, IconFA } from '../components/Icons'
 import { Link } from 'react-router-dom'
 
 const LambdaItem = (props) =>
-  <tr key={props._id}>
+  <tr>
     <td><Link to={'/lambdas/edit/' + props._id}>{props.name}</Link></td>
     <td>{props.language}</td>
     <td>{props.bindings.length} {props.bind_multithread ? <IconSL i='directions' /> : null}</td>
@@ -101,7 +101,7 @@ export class Lambdas extends Component {
               <tbody>
                 {
                   this.state.data.map(
-                    i => <LambdaItem {...i} />
+                    i => <LambdaItem key={i._id} {...i} />
                   )
                 }
               </tbody>
