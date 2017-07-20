@@ -30,6 +30,7 @@ def verify_auth_token(token):
     except BadSignature:
         return None  # invalid token
     user = app_mongo.db['users'].find_one(ObjectId(data['id']))
+    g.user = user
     return user
 
 
@@ -49,7 +50,7 @@ def user_login(email_or_token, password):
     return True
 
 
-def generate_auth_token(user_obj, expiration=600):
+def generate_auth_token(user_obj, expiration=1440*15):
     s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
     return s.dumps({'id': str(user_obj['_id'])})
 

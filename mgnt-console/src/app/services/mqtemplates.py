@@ -17,13 +17,18 @@ def update_mqtemplate(data, user_id):
 
 def get_mqtemplate(_id):
     db = app_mongo.db
-    return db.mqtemplates.find_one(ObjectId(_id))
+    data = db.mqtemplates.find_one(ObjectId(_id))
+    data['_id'] = str(data['_id'])
+    return data
 
 
 def list_mqtemplates():
     db = app_mongo.db
     cursor = db.mqtemplates.find({})
-    return list(cursor)
+    data = list(cursor)
+    for i in data:
+        i['_id'] = str(i['_id'])
+    return data
 
 
 def update_mqdevices(_id):

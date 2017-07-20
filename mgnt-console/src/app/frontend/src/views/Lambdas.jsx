@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { Card, CardHeader, CardBlock, Button, Table, Badge } from 'reactstrap'
 import { IconSL, IconFA } from '../components/Icons'
 import { Link } from 'react-router-dom'
+import { signedHeader, fetchJSON } from '../utils/request'
 
 const LambdaItem = (props) =>
   <tr>
     <td><Link to={'/lambdas/edit/' + props._id}>{props.name}</Link></td>
+    <td><Button className='py-0 text-danger' color='link' onClick={props.onDelete}>Delete</Button></td>
     <td>{props.language}</td>
     <td>{props.bindings.length} {props.bind_multithread ? <IconSL i='directions' /> : null}</td>
     <td>{props.workers}</td>
@@ -28,50 +30,33 @@ export class Lambdas extends Component {
   }
 
   addLambda () {
-    setTimeout(() => {
-      let newId = Math.random().toString(36).substring(7)
-      this.props.history.push('/lambdas/edit/' + newId)
-    }, 1000)
+    fetch('/api/lambdas/add', {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(json => this.props.history.push('/lambdas/edit/' + json.result))
+      .catch(console.log)
+  }
+
+  onDelete (_id) {
+    fetch(`/api/lambdas/${_id}/delete`, {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(() => this.reload())
   }
 
   reload () {
     this.setState({status: 'loading'})
-    setTimeout(() => {
-      this.setState({data: [
-        {
-          _id: 'lambda1',
-          name: 'Test Lambda 1',
-          description: 'This is a description',
-          bindings: ['esp-mesh.#.operation', 'test.*.message'],
-          bind_multithread: true,
-          language: 'python3',
-          workers: 1,
-          active: true
-        },
-        {
-          _id: 'lambda2',
-          name: 'Test Lambda 2',
-          description: 'This is a description',
-          bindings: ['esp-mesh.#.operation'],
-          bind_multithread: false,
-          language: 'python3',
-          workers: 8,
-          remarks: 'Exception while compiling the code',
-          active: false
-        },
-        {
-          _id: 'lambda3',
-          name: 'Test Lambda 3',
-          description: 'This is a description',
-          bindings: ['esp-mesh.#.operation', 'test.*.message'],
-          bind_multithread: true,
-          language: 'python3',
-          workers: 2,
-          active: false
-        }
-      ]})
-      this.setState({status: 'loaded'})
-    }, 1500)
+    fetch('/api/lambdas/list', {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(json => this.setState({
+        data: json.result,
+        status: 'loaded'
+      }))
+      .catch(e => {
+        this.setState({
+          data: [],
+          status: 'loaded'
+        })
+        console.log(e)
+      })
   }
 
   render () {
@@ -92,6 +77,7 @@ export class Lambdas extends Component {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th />
                   <th>Language</th>
                   <th>Bindings</th>
                   <th>Workers</th>
@@ -101,7 +87,7 @@ export class Lambdas extends Component {
               <tbody>
                 {
                   this.state.data.map(
-                    i => <LambdaItem key={i._id} {...i} />
+                    i => <LambdaItem key={i._id} onDelete={this.onDelete.bind(this, i._id)} {...i} />
                   )
                 }
               </tbody>

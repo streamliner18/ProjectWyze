@@ -18,14 +18,20 @@ def update_mqdevice(data, user_id):
 def list_mqdevices():
     db = app_mongo.db
     cursor = db.mqdevices.find({})
-    return list(cursor)
+    data = list(cursor)
+    for i in data:
+        i['_id'] = str(i['_id'])
+    return data
 
 
 def get_mqdevice(_id):
     db = app_mongo.db
-    return db.mqdevices.find_one(ObjectId(_id))
+    data = db.mqdevices.find_one(ObjectId(_id))
+    data['_id'] = str(data['_id'])
+    return data
 
 
 def delete_mqdevice(_id):
     db = app_mongo.db
+
     db.mqdevices.delete_one({'_id': ObjectId(_id)})

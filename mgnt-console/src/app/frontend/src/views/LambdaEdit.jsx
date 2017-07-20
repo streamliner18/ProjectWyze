@@ -15,6 +15,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap'
 import classnames from 'classnames'
 import update from 'immutability-helper'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { signedHeader, fetchJSON } from '../utils/request'
 
 const LambdaStatCard = props =>
   <Row>
@@ -52,6 +53,10 @@ export class LambdaEdit extends Component {
         enableSnippets: true,
         showLineNumbers: true,
         tabSize: 2
+      },
+      stats: {
+        exec_count: 976,
+        exec_latency: 825
       }
     }
     this.reload = this.reload.bind(this)
@@ -70,29 +75,12 @@ export class LambdaEdit extends Component {
 
   reload () {
     this.setState({status: 'loading'})
-    setTimeout(() => {
-      this.setState({status: 'loaded'})
-      this.setState({
-        data: {
-          _id: 'lambda1',
-          name: 'Test Lambda 1',
-          description: 'This is a description',
-          bindings: ['esp-mesh.#.operation', 'test.*.message'],
-          bind_multithread: true,
-          language: 'python3',
-          workers: 2,
-          code: 'import numpy as np\nreturn np.zeros(10)',
-          active: true,
-          durable: true,
-          recursive: true,
-          remarks: 'Runtime error: "AssertionError"'
-        },
-        stats: {
-          exec_count: 976,
-          exec_latency: 825
-        }
+    fetch(`/api/lambdas/${this.props.match.params.id}`, {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(json => {
+        this.setState({data: json.result, status: 'loaded'})
       })
-    }, 700)
+      .catch(console.log)
   }
 
   onChange (e) {
@@ -108,10 +96,19 @@ export class LambdaEdit extends Component {
   onSubmit (e) {
     console.log('Submitting:', this.state.data)
     this.setState({updating: true})
-    setTimeout(() => this.setState({
-      modified: false,
-      updating: false
-    }), 500)
+    let headers = signedHeader()
+    headers.append('Content-Type', 'application/json')
+    fetch('/api/lambdas/update', {
+      method: 'post',
+      headers: headers,
+      body: JSON.stringify(this.state.data)
+    }).then(fetchJSON)
+      .then(json => {
+        if (json.status === 'ok') this.setState({
+          modified: false,
+          updating: false
+        })
+      })
   }
 
   componentWillMount () {
