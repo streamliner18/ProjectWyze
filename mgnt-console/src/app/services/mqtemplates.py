@@ -22,7 +22,8 @@ def get_mqtemplate(_id):
 
 def list_mqtemplates():
     db = app_mongo.db
-    return db.mqtemplates.find({})
+    cursor = db.mqtemplates.find({})
+    return list(cursor)
 
 
 def update_mqdevices(_id):

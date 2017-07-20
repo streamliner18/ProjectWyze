@@ -22,7 +22,7 @@ class TestMQDevices(TestCase):
             'device_id': '123abc',
             'input_key': 'status',
             'output_key': 'command',
-            'bindings:': []
+            'channels:': []
         }
         _id = update_mqdevice(device, 'user_id')
         self.assertIsNotNone(_id)
@@ -31,7 +31,7 @@ class TestMQDevices(TestCase):
         self.assertIsNotNone(device['created'])
         self.assertEqual(device['created_by'], 'user_id')
         # Now let's add a binding
-        device['bindings'] = [{
+        device['channels'] = [{
             'rule': '/m/23',
             'alias': 'bedroom.light',
             'has_input': True
@@ -40,7 +40,7 @@ class TestMQDevices(TestCase):
         self.assertIsNotNone(_id)
         device = mongo.db.mqdevices.find_one()
         self.assertIsNotNone(device)
-        self.assertEqual(len(device['bindings']), 1)
+        self.assertEqual(len(device['channels']), 1)
 
     def test_retrieve_devices(self):
         device = {
@@ -50,7 +50,7 @@ class TestMQDevices(TestCase):
             'device_id': '123abc',
             'input_key': 'status',
             'output_key': 'command',
-            'bindings:': []
+            'channels:': []
         }
         _id = update_mqdevice(device, 'user_id')
         device = get_mqdevice(_id)
@@ -64,11 +64,11 @@ class TestMQDevices(TestCase):
             'device_id': '123abc',
             'input_key': 'status',
             'output_key': 'command',
-            'bindings:': []
+            'channels:': []
         }
         _id = update_mqdevice(device, 'user_id')
         devices = list_mqdevices()
-        self.assertEqual(devices.count(), 1)
+        self.assertEqual(len(devices), 1)
 
     def test_delete_devices(self):
         device = {
@@ -78,9 +78,9 @@ class TestMQDevices(TestCase):
             'device_id': '123abc',
             'input_key': 'status',
             'output_key': 'command',
-            'bindings:': []
+            'channels:': []
         }
         _id = update_mqdevice(device, 'user_id')
         delete_mqdevice(_id)
         devices = list_mqdevices()
-        self.assertEqual(devices.count(), 0)
+        self.assertEqual(len(devices), 0)

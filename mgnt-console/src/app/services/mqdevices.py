@@ -17,7 +17,8 @@ def update_mqdevice(data, user_id):
 
 def list_mqdevices():
     db = app_mongo.db
-    return db.mqdevices.find({})
+    cursor = db.mqdevices.find({})
+    return list(cursor)
 
 
 def get_mqdevice(_id):

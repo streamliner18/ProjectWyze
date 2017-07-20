@@ -5,12 +5,13 @@ from .seeds import empty_lambda
 
 def add_lambda(user_id):
     db = app_mongo.db
-    return db.lambdas.insert_one(empty_lambda(user_id)).inserted_id
+    inserted_id = db.lambdas.insert_one(empty_lambda(user_id)).inserted_id
+    return str(inserted_id)
 
 
 def update_lambda(data):
     db = app_mongo.db
-    db.lambdas.replace_one(data['_id'], data)
+    db.lambdas.replace_one({'_id': data['_id']}, data)
 
 
 def get_lambda(_id):
@@ -20,7 +21,8 @@ def get_lambda(_id):
 
 def list_lambdas():
     db = app_mongo.db
-    return db.lambdas.find(projection='name language bindings bind_multithread workers status remarks'.split())
+    cursor = db.lambdas.find(projection='name language bindings bind_multithread workers status remarks'.split())
+    return list(cursor)
 
 
 def delete_lambda(_id):
