@@ -1,5 +1,24 @@
 from . import *
 from pymongo import ASCENDING, DESCENDING
+from datetime import datetime
+
+
+def empty_lambda(user_id):
+    return {
+        'name': 'Untitled',
+        'description': '',
+        'created': datetime.utcnow(),
+        'created_by': user_id,
+        'language': 'python3',
+        'code': '# Start typing your code here',
+        'bindings': [],
+        'bind_multithreaded': False,
+        'durable': False,
+        'recursive': False,
+        'active': False,
+        'remarks': '',
+        'workers': 1
+    }
 
 
 def build_database():

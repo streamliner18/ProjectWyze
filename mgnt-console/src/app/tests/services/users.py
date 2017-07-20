@@ -1,9 +1,10 @@
 from flask_testing import TestCase
-from ..make_app import app
-from ..app import app_mongo as mongo
+from ...make_app import app
+from ...app import app_mongo as mongo
 
-from ..services.users import add_invited_user, list_users, remove_user, set_user_property
-from ..services.auth import user_register, user_login
+from ...services.users import add_invited_user, list_users, remove_user, set_user_property
+from ...services.auth import user_register, user_login
+
 
 class TestUsers(TestCase):
     def create_app(self):
