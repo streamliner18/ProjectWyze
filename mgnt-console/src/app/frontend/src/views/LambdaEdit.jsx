@@ -4,6 +4,11 @@ import { Row, Col, Card, CardHeader, CardBlock, CardFooter, Progress, Button } f
 import AceEditor from 'react-ace'
 import 'brace/mode/python'
 import 'brace/theme/github'
+import 'brace/snippets/python'
+import 'brace/ext/language_tools'
+import 'brace/ext/statusbar'
+import 'brace/ext/themelist'
+import 'brace/ext/searchbox'
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import { Form, FormGroup, Label, Input, InputGroup, InputGroupButton } from 'reactstrap'
 import { ListGroup, ListGroupItem } from 'reactstrap'
@@ -43,8 +48,8 @@ export class LambdaEdit extends Component {
       updating: false,
       aceConfig: {
         enableBasicAutocompletion: true,
-        enableLiveAutocompletion: false,
-        enableSnippets: false,
+        enableLiveAutocompletion: true,
+        enableSnippets: true,
         showLineNumbers: true,
         tabSize: 2
       }
