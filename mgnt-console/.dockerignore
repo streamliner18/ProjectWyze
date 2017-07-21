@@ -1,3 +1,4 @@
-src/frontend
+src/app/frontend/
+src/app/tests
 *.pyc
 */__pycache__
