@@ -12,7 +12,7 @@ Special thanks to Ethan Luo Yicheng at Imperial College London, Professor Christ
 
 ## Plug-n-Play
 
-Deploying Project Wyze for your day-to-day amusement is simple:
+Deploying Project Wyze for your day-to-day amusement is simple. Download the latest release and just run:
 
 ```bash
 docker-compose up
@@ -20,7 +20,9 @@ docker-compose up
 
 It opens up a MQTT endpoint at 1883, a RabbitMQ console at 15672, a RabbitMQ endpoint at 5672, an output streaming endpoint at 5080, and a management console at 5081.
 
-Refer to the [Deployment Guide](docs/deploy.md) for instructions on deploying in a production environment.
+Under each component's folder, you may also find a `utils` section, where we provide useful tools that we use to test individual components, run sample workloads, and cut corners in our workflow (yes!), so that you can do so as well (You're welcome. \<3)
+
+Refer to the [Deployment Guide](docs/deploy.md) for instructions on deploying a modified codebase or in a production environment. Trust me, that's way simpler than you think it is.
 
 ## Architecture
 
