@@ -3,6 +3,7 @@ import { Card, CardHeader, CardBlock, Button, Table, Badge } from 'reactstrap'
 import { IconSL, IconFA } from '../components/Icons'
 import { Link } from 'react-router-dom'
 import { signedHeader, fetchJSON } from '../utils/request'
+import { swalAlert } from '../utils/alerts'
 
 const LambdaItem = (props) =>
   <tr>

@@ -7,6 +7,7 @@ import update from 'immutability-helper'
 import { Form, FormGroup, Label, Input } from 'reactstrap'
 import { signedHeader, fetchJSON, signedJSONHeader } from '../utils/request'
 import { onChange } from '../utils/forms'
+import { swalAlert } from '../utils/alerts'
 
 const MQDeviceItem = props =>
   <tr>

@@ -7,6 +7,7 @@ import update from 'immutability-helper'
 import { Form, FormGroup, Label, Input, InputGroup, InputGroupButton } from 'reactstrap'
 import { signedHeader, fetchJSON, signedJSONHeader } from '../utils/request'
 import { onChange } from '../utils/forms'
+import { swalAlert } from '../utils/alerts'
 
 const MQTemplateItem = props =>
   <tr>
