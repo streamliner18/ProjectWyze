@@ -1,6 +1,7 @@
 import simplejson as json
 from os import environ
 from time import time
+from uuid import uuid1
 
 DEBUG = environ.get('DEBUG', False)
 
@@ -20,6 +21,7 @@ def stamp_tag(body, key, prop):
     body['key'] = key
     # body['timestamp'] = prop.timestamp
     # TODO: Figure out how to use native timestamp
+    body['_id'] = uuid1()
     body['timestamp'] = int(time())
     return body
 
