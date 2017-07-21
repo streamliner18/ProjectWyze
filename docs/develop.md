@@ -32,15 +32,16 @@ input = status
 output = command
 ```
 
-An ingress message `[mesh/b5ea3f/42/M/status] 255` will enter the system as `[bedroom.light.brightness] 255`. Similarly, an egress message turning off the light `[bedroom.light.brightness] {"value": 0}` will be sent to the MQTT broker as `[mesh/b5ea3f/42/M/command] {"value":0}`.
+An ingress message `[mesh/b5ea3f/42/M/status] 255` will enter the system as `[bedroom.light.brightness] 255`. Similarly, an egress message turning off the light `[bedroom.light.brightness.output] {"value": 0}` will be sent to the MQTT broker as `[mesh/b5ea3f/42/M/command] {"value":0}`.
 
 #### `pre-processor`: Preprocessor
 
-The preprocessor does three things two the incoming message:
+The preprocessor does four things to the incoming message:
 
 1. It wraps any non-JSON body with a "value" tag. `25` -> `{"value": "25"}
 2. It stamps a UUID to the message so it can be identified.
 3. It stamps the RabbitMQ message timestamp into the message body.
+4. It stamps the topic of that message into the message body.
 
 For efficiency reasons, `mqtt-demux` is integrated into the `pre-processor`.
 
