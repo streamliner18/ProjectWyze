@@ -1,0 +1,23 @@
+// Here you can add other styles
+
+.collapse200-enter {
+    opacity: 0.01;
+    max-height: 0;
+}
+
+.collapse200-enter.collapse200-enter-active {
+    opacity: 1;
+    max-height: 200px;
+    transition: opacity 0.3s ease-out, max-height 0.3s ease-out;
+}
+
+.collapse200-leave {
+    opacity: 1;
+    max-height: 200px;
+}
+
+.collapse200-leave.collapse200-leave-active {
+    max-height: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease-out, max-height 0.3s ease-out;
+}
