@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Row, Col, Progress, Button } from 'reactstrap'
-import { Card, CardBlock, CardFooter, CardHeader } from 'reactstrap'
+import { Alert, Card, CardBlock, CardFooter, CardHeader } from 'reactstrap'
 import { IconSL } from '../components/Icons'
 import { Line } from 'react-chartjs-2'
 
@@ -251,12 +251,15 @@ export class Dashboard extends Component {
   render () {
     return (
       <div className='animated fadeIn'>
-          <QuickStats />
-          <MainChart />
-          <Row>
-            <DeviceStats />
-            <LambdaStats />
-          </Row>
+        <Row>
+          <Col><Alert color='warning'>Note: The contents of this dashboard are imaginary.</Alert></Col>
+        </Row>
+        <QuickStats />
+        <MainChart />
+        <Row>
+          <DeviceStats />
+          <LambdaStats />
+        </Row>
       </div>
     )
   }
