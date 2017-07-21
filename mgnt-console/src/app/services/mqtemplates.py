@@ -6,12 +6,13 @@ from datetime import datetime
 def update_mqtemplate(data, user_id):
     db = app_mongo.db
     if '_id' not in data:
-        data['created_by'] = user_id
+        data['created_by'] = str(user_id)
         data['created'] = datetime.utcnow()
         _id = db.mqtemplates.insert_one(data).inserted_id
     else:
+        data['_id'] = ObjectId(data['_id'])
         _id = data['_id']
-        db.mqtemplates.replace_one({'_id': ObjectId(_id)}, data)
+        db.mqtemplates.replace_one({'_id': _id}, data)
     return str(_id)
 
 

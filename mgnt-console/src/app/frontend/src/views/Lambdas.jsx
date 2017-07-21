@@ -7,7 +7,7 @@ import { signedHeader, fetchJSON } from '../utils/request'
 const LambdaItem = (props) =>
   <tr>
     <td><Link to={'/lambdas/edit/' + props._id}>{props.name}</Link></td>
-    <td><Button className='py-0 text-danger' color='link' onClick={props.onDelete}>Delete</Button></td>
+    <td><Button className='py-0 text-danger' color='link' onClick={props.onDelete}><IconSL i='trash' />Delete</Button></td>
     <td>{props.language}</td>
     <td>{props.bindings.length} {props.bind_multithread ? <IconSL i='directions' /> : null}</td>
     <td>{props.workers}</td>

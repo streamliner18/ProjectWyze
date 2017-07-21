@@ -8,7 +8,6 @@ blueprint = Blueprint('api_lambdas', __name__, url_prefix='/api/lambdas')
 @blueprint.route('/add')
 @app_auth.login_required
 def lambda_add():
-    print(g)
     _id = add_lambda(g.user['_id'])
     return jsonify(
         status='ok',

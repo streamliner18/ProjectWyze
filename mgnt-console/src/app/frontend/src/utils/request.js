@@ -7,8 +7,13 @@ export const signedHeader = () => {
   return header
 }
 
+export const signedJSONHeader = () => {
+  let headers = signedHeader()
+  headers.append('Content-Type', 'application/json')
+  return headers
+}
+
 export const callLogout = () => {
-  console.log('Calling Logout');
   store.dispatch({type: 'AUTH_LOGOUT'})
 }
 

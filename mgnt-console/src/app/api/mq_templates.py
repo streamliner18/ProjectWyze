@@ -29,7 +29,6 @@ def get_template(_id):
 @blueprint.route('/update', methods=['POST'])
 @app_auth.login_required
 def update_template():
-    print('Logged in template: {}'.format(g.user))
     data = request.json
     update_mqtemplate(data, g.user['_id'])
     return jsonify(
@@ -46,7 +45,7 @@ def delete_templates(_id):
     )
 
 
-@blueprint.route('<_id>/update_devices')
+@blueprint.route('/<_id>/update_devices')
 @app_auth.login_required
 def update_template_devices(_id):
     update_mqdevices(_id)

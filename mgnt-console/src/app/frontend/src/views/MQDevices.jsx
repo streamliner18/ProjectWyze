@@ -4,16 +4,29 @@ import { Row, Col, Card, CardHeader, CardBlock, Button, Table } from 'reactstrap
 import { ListGroup, ListGroupItem } from 'reactstrap'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import update from 'immutability-helper'
-import { Form, FormGroup, Label, Input, InputGroup, InputGroupButton } from 'reactstrap'
+import { Form, FormGroup, Label, Input } from 'reactstrap'
+import { signedHeader, fetchJSON, signedJSONHeader } from '../utils/request'
+import { onChange } from '../utils/forms'
 
 const MQDeviceItem = props =>
   <tr>
     <td><Button color='link' className='py-0 px-0' onClick={props.onEdit}>{props.name}</Button></td>
+    <td><Button color='link' className='py-1 text-danger' onClick={props.onDelete}><IconSL i='trash' />Delete</Button></td>
     <td>{props.device_id}</td>
-    <td>{props.templates[props.base_template]}</td>
+    <td>{props.templates[props.base_template].name}</td>
     <td>{props.description}</td>
     <td>{props.channels.length}</td>
   </tr>
+
+const emptyDevice = {
+  name: 'Untitled',
+  description: '',
+  input_key: 'status',
+  output_key: 'command',
+  base_template: '',
+  device_id: 'device-id',
+  channels: []
+}
 
 export class MQDevices extends Component {
   constructor (props) {
@@ -28,9 +41,9 @@ export class MQDevices extends Component {
     }
     this.reload = this.reload.bind(this)
     this.addDevice = this.addDevice.bind(this)
-    this.onChangeModalForm = this.onChangeModal.bind(this, 'add_form')
-    this.onChangeModal = this.onChangeModal.bind(this, 'current')
-    this.onAddBinding = this.onAddBinding.bind(this)
+    this.onChangeModalForm = onChange.bind(this, this, 'add_form')
+    this.onChangeModal = onChange.bind(this, this, 'current')
+    this.onAddBinding = onChange.bind(this)
   }
 
   componentWillMount () {
@@ -47,8 +60,20 @@ export class MQDevices extends Component {
 
   saveDevice (save) {
     if (save) {
-      //TODO: Perform the saving step
-      this.reload()
+      fetch('/api/mqdevices/update', {
+        method: 'post',
+        headers: signedJSONHeader(),
+        body: JSON.stringify(this.state.current)
+      }).then(fetchJSON)
+        .then(json => {
+          if (json.status === 'ok') {
+            this.setState({
+              current: {},
+              editing: false
+            })
+            this.reload()
+          }
+        })
     } else {
       this.setState({
         current: {},
@@ -57,26 +82,16 @@ export class MQDevices extends Component {
     }
   }
 
+  onDelete (_id) {
+    fetch(`/api/mqdevices/${_id}/delete`, {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(() => this.reload())
+  }
+
   addDevice () {
-    let emptyDevice = {
-      name: 'Untitled',
-      description: '',
-      input_key: 'status',
-      output_key: 'command',
-      channels: []
-    }
     this.setState({
       current: emptyDevice,
       editing: true
-    })
-  }
-
-  onChangeModal (label, e) {
-    const t = e.target
-    const value = t.type === 'checkbox' ? t.checked : t.value
-    const name = t.name
-    this.setState({
-      [label]: update(this.state[label], {[name]: {$set: value}})
     })
   }
 
@@ -93,48 +108,17 @@ export class MQDevices extends Component {
 
   reload () {
     this.setState({status: 'loading'})
-    setTimeout(() => {
-      this.setState({
-        data: [
-          {
-            _id: 'device1',
-            name: 'Garden Pump',
-            base_template: 'esp-pump-ctrl',
-            description: 'Garden Pump Controller',
-            device_id: 'garden.pumps.main',
-            channels: [
-              {rule: '/ch1/m', alias: '.temperature', has_input: false},
-              {rule: '/ch2/k', alias: '.pump.1.state', has_input: true},
-              {rule: '/ch2/l', alias: '.pump.2.state', has_input: true},
-              {rule: '/ch2/m', alias: '.pump.3.state', has_input: true},
-              {rule: '/ch2/n', alias: '.pump.4.state', has_input: true}
-            ],
-            input_key: 'status',
-            output_key: 'command'
-          },
-          {
-            _id: 'device2',
-            name: 'Living Room Fan',
-            base_template: 'esp-fan-ctrl',
-            device_id: 'livingroom.fan',
-            description: 'Living Room Fan Controller',
-            channels: [
-              {rule: '/ch1/m', alias: '.temperature', has_input: false},
-              {rule: '/ch2/k', alias: '.pump.1.state', has_input: true},
-              {rule: '/ch2/l', alias: '.pump.2.state', has_input: true},
-              {rule: '/ch2/m', alias: '.pump.3.state', has_input: true}
-            ],
-            input_key: 'input',
-            output_key: 'output'
-          }
-        ],
-        status: 'loaded',
-        templates: {
-          'esp-pump-ctrl': 'Standard Pump Controller',
-          'esp-fan-ctrl': 'Standard Fan Controller'
+    fetch('/api/mqdevices/list', {headers: signedHeader()})
+      .then(fetchJSON)
+      .then(json => {
+        console.log(json)
+        json.templates[''] = Object.assign({}, emptyDevice, {name: ''})
+        this.setState({
+          data: json.result,
+          templates: json.templates,
+          status: 'loaded'
         }
-      })
-    }, 1000)
+      )})
   }
 
   render () {
@@ -158,10 +142,17 @@ export class MQDevices extends Component {
               </FormGroup>
               <FormGroup row>
                 <Label sm='3'>Base Template: </Label>
-                <Col sm='9'><Input type='select' name='base_template' value={this.state.current.base_template} onChange={this.onChangeModal} >
+                <Col sm='9'><Input type='select' name='base_template' value={this.state.current.base_template} onChange={(e) =>
+                      this.setState({
+                        current: Object.assign({}, this.state.current, {
+                          channels: this.state.templates[e.target.value].channels,
+                          base_template: e.target.value
+                        })
+                      })
+                    }>
                   {
                     Object.keys(this.state.templates).map(i =>
-                      <option value={i}>{this.state.templates[i]}</option>
+                      <option key={i} value={i}>{this.state.templates[i].name}</option>
                     )
                   }
                 </Input>
@@ -169,9 +160,9 @@ export class MQDevices extends Component {
               </FormGroup>
               <FormGroup row>
                 <Label sm='3' md='2'>Input Key: </Label>
-                <Col sm='9' md='4'><Input name='description' value={this.state.current.input_key} onChange={this.onChangeModal} /></Col>
+                <Col sm='9' md='4'><Input name='input_key' value={this.state.current.input_key} onChange={this.onChangeModal} /></Col>
                 <Label sm='3' md='2'>Output Key: </Label>
-                <Col sm='9' md='4'><Input name='description' value={this.state.current.output_key} onChange={this.onChangeModal} /></Col>
+                <Col sm='9' md='4'><Input name='output_key' value={this.state.current.output_key} onChange={this.onChangeModal} /></Col>
               </FormGroup>
             </Form>
             <Form inline>
@@ -234,6 +225,7 @@ export class MQDevices extends Component {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th />
                   <th>Device ID</th>
                   <th>Base Template</th>
                   <th>Description</th>
@@ -243,7 +235,7 @@ export class MQDevices extends Component {
               <tbody>
                 {
                   this.state.data.map(
-                    (i, idx) => <MQDeviceItem key={i._id} templates={this.state.templates} onEdit={this.editDevice.bind(this, idx)}{...i} />
+                    (i, idx) => <MQDeviceItem key={i._id} templates={this.state.templates} onEdit={this.editDevice.bind(this, idx)} onDelete={this.onDelete.bind(this, i._id)} {...i} />
                   )
                 }
               </tbody>

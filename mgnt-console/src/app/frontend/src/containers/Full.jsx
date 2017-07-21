@@ -31,6 +31,6 @@ export class Full extends Component {
         </div>
         <Footer />
       </div>
-  )
+    )
   }
 }

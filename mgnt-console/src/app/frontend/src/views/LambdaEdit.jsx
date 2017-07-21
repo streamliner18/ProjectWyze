@@ -15,7 +15,8 @@ import { ListGroup, ListGroupItem } from 'reactstrap'
 import classnames from 'classnames'
 import update from 'immutability-helper'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { signedHeader, fetchJSON } from '../utils/request'
+import { signedHeader, fetchJSON, signedJSONHeader } from '../utils/request'
+import { onChange } from '../utils/forms'
 
 const LambdaStatCard = props =>
   <Row>
@@ -61,7 +62,7 @@ export class LambdaEdit extends Component {
     }
     this.reload = this.reload.bind(this)
     this.toggle = this.toggle.bind(this)
-    this.onChange = this.onChange.bind(this)
+    this.onChange = onChange.bind(this, this, 'data')
     this.onSubmit = this.onSubmit.bind(this)
   }
 
@@ -83,24 +84,11 @@ export class LambdaEdit extends Component {
       .catch(console.log)
   }
 
-  onChange (e) {
-    const t = e.target
-    const value = t.type === 'checkbox' ? t.checked : t.value
-    const name = t.name
-    this.setState({
-      data: update(this.state.data, {[name]: {$set: value}}),
-      modified: true
-    })
-  }
-
   onSubmit (e) {
-    console.log('Submitting:', this.state.data)
     this.setState({updating: true})
-    let headers = signedHeader()
-    headers.append('Content-Type', 'application/json')
     fetch('/api/lambdas/update', {
       method: 'post',
-      headers: headers,
+      headers: signedJSONHeader(),
       body: JSON.stringify(this.state.data)
     }).then(fetchJSON)
       .then(json => {

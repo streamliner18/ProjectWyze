@@ -9,10 +9,12 @@ blueprint = Blueprint('api_mqdevices', __name__, url_prefix='/api/mqdevices')
 @blueprint.route('/list')
 @app_auth.login_required
 def list_devices():
+    mqtemplates = list_mqtemplates()
+    mqtemplates = {i['_id']: i for i in mqtemplates}
     return jsonify(
         status='ok',
         result=list_mqdevices(),
-        templates=list_mqtemplates()
+        templates=mqtemplates
     )
 
 
@@ -32,8 +34,7 @@ def get_device(_id):
 @app_auth.login_required
 def update_device():
     print('Logged in device: {}'.format(g.user))
-    # TODO: Get the data out of the post
-    data = {}
+    data = request.json
     update_mqdevice(data, g.user['_id'])
     return jsonify(
         status='ok'
