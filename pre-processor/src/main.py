@@ -1,49 +1,13 @@
-import pika
-from processing import mqtt_cb, amqp_cb
-from os import environ
-from pika import exceptions
-from pika.adapters import twisted_connection
-from twisted.internet import defer, reactor, protocol, task
+from app.amq.pipelines import setup_pipelines
+from app.amq.driver import ch
+from app.amq.mqtt_map import init_mqtt_mappings
 
-print("Configuring RabbitMQ connection...")
 
-address = environ.get("BROKER_ADDRESS", 'localhost')
-connection = pika.BlockingConnection(pika.ConnectionParameters(address))
-ch = connection.channel()
-
-print("Connecting to broker on address {}".format(address))
-
-# Setup for outgoing exchange
-ch.exchange_declare(
-    exchange='ingress',
-    exchange_type='topic',
-    durable=True
-)
-
-# Setup for MQTT transaction
-mqtt_q = ch.queue_declare(exclusive=True)
-ch.queue_bind(
-    exchange='amq.topic',
-    queue=mqtt_q.method.queue,
-    routing_key="#"
-)
-ch.basic_consume(mqtt_cb, queue=mqtt_q.method.queue, no_ack=True)
-
-# Setup for AMQP transaction
-ch.exchange_declare(
-    exchange='incoming',
-    exchange_type='topic',
-    durable=True
-)
-amqp_q = ch.queue_declare(exclusive=True)
-ch.queue_bind(
-    exchange='incoming',
-    queue=amqp_q.method.queue,
-    routing_key='#'
-)
-ch.basic_consume(amqp_cb, queue=amqp_q.method.queue, no_ack=True)
-
-print("Configuration complete.")
-
-# Start the thing
-ch.start_consuming()
+if __name__ == '__main__':
+    print("Configuring RabbitMQ connection...")
+    setup_pipelines()
+    print("Configuring Premap mappings...")
+    init_mqtt_mappings()
+    print("Configuration complete. Now Starting.")
+    # Start the thing
+    ch.start_consuming()
