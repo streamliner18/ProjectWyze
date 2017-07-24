@@ -4,6 +4,7 @@ MAINTAINER Project Wyze Team
 
 ENV BUILD_DIR /tmp/build/
 ENV APP_DIR /var/app
+ENV PRODUCTION=1
 
 RUN apk update && apk add --update alpine-sdk
 
