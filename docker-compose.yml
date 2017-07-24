@@ -13,8 +13,8 @@ services:
         build: mongodb:latest
         ports:
             - "27017:27017"
-    prepros:
-        build: ./pre-processor
+    router:
+        build: ./wyze-router
         links:
             - rabbit
             - mongo
