@@ -2,9 +2,11 @@
 
 ## Close-up of the Three-tier architecture
 
-### Ingress Tier
+### Router Tier
 
 This tier of components handle ingestion of data. As the RabbitMQ broker exposes both `5672 (AMQP)` and `1883 (MQTT)` ports, you may connect any data sources to these ports or write up your own data feed that publishes to the queue, similar to `spouts` in Apache Storm. When constructing your route, publish to the exchange `ingress` to ensure reception.
+
+The entire tier is integrated into one unified container, named `wyze-router`.
 
 #### `mqtt-demux`: MQTT Demuxer
 
@@ -44,8 +46,6 @@ The preprocessor does four things to the incoming message:
 2. It stamps a UUID to the message so it can be identified.
 3. It stamps the RabbitMQ message timestamp into the message body.
 4. It stamps the topic of that message into the message body.
-
-For efficiency reasons, `mqtt-demux` is integrated into the `pre-processor`.
 
 ### Data Tier
 
