@@ -12,6 +12,7 @@ def make_connection():
     print('RabbitMQ address: {}'.format(address))
     connection = pika.BlockingConnection(pika.ConnectionParameters(address))
     ch = connection.channel()
+    ch.confirm_delivery()
     return connection, ch
 
 

@@ -17,7 +17,7 @@ class WorkerThread(Thread):
     def callback_handler(self, channel, methods, props, body):
         try:
             self.handle_func(body, self.context)
-            result = channel.basic_ack(delivery_tag=methods.delivery_tag)
+            channel.basic_ack(delivery_tag=methods.delivery_tag)
         except Exception as e:
             # Report the fucking error
             print('[{}]: {} has error: {}'.format(self.props['name'], self.name, e.__repr__()))
@@ -31,6 +31,10 @@ class WorkerThread(Thread):
         self.context.set_channel(self._ch)
         print('[{}]: Warming up on queue {}'.format(self.props['name'], self._queue))
         # Now let's start setting up consumers
+        self._ch.queue_declare(self._queue, auto_delete=True)
+        bind_target = 'egress' if self.props['recursive'] else 'ingress'
+        for i in self.props.get('bindings', []):
+            self._ch.queue_bind(self._queue, bind_target, i)
         self._ch.basic_consume(
             self.callback_handler,
             self._queue,

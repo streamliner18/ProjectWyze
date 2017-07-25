@@ -2,6 +2,7 @@ from multiprocessing import Process
 from .context import SubprocessContext
 from ..drivers.amq import make_connection
 from .worker import WorkerThread
+from uuid import uuid4
 
 
 class LambdaProcess(Process):
@@ -25,28 +26,35 @@ class LambdaProcess(Process):
 
     def prepare_queue(self):
         self._conn, self._ch = make_connection()
-        # self._ch.add_on_close_callback(self.prepare_queue)
-        self._queue = self._ch.queue_declare(auto_delete=True).method.queue
+        self._queue = str(uuid4())
         self._ch.exchange_declare('egress', type='topic', durable=True)
         self._ch.exchange_declare('ingress', type='topic', durable=True)
-        bind_target = 'egress' if self.data['recursive'] else 'ingress'
-        for i in self.data.get('bindings', []):
-            self._ch.queue_bind(self._queue, bind_target, i)
 
     def run(self, **kwargs):
         print('Lambda {} is booting up.'.format(self.data['name']))
         self.compile_code(self.data['code'])
         self.prepare_queue()
+        make_thread = lambda: WorkerThread(
+            self.init_func,
+            self.handle_func,
+            parent=self.context,
+            queue=self._queue,
+            **self.data
+        )
+
         threads = [
-            WorkerThread(
-                self.init_func,
-                self.handle_func,
-                parent=self.context,
-                queue=self._queue,
-                **self.data
-            )
+            make_thread()
             for _ in range(self.data['workers'])]
         for i in threads:
             i.start()
-        for i in threads:
-            i.join()
+        while True:
+            for i in threads:
+                if i.is_alive():
+                    i.join(0.5)
+                else:
+                    print('{} has died: Restarting.'.format(i.name))
+                    threads.remove(i)
+                    new_thr = make_thread()
+                    threads.append(new_thr)
+                    new_thr.start()
+                    new_thr.join(0.5)

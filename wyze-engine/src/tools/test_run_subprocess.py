@@ -10,14 +10,11 @@ def init(context):
 def handle_input(msg, context):
     # print("Got Message:")
     # print(msg)
-    counter = context.get_state('counter')
-    context.set_state('counter', counter+1)
-    # print('New Counter: {}'.format(counter+1))
     context.emit('logs.output', '123')
     """,
     'durable': True,
     'recursive': True,
-    'workers': 1,
+    'workers': 2,
     'bindings': ['logs.#']
 }
 
