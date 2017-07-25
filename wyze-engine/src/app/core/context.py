@@ -6,6 +6,8 @@ class SubprocessContext:
     def __init__(self):
         self._state = {}
         self._lock = RLock()
+        self.signal = None
+        self.signal_remark = ''
 
     def set_state(self, key, value):
         with self._lock:
@@ -20,6 +22,10 @@ class SubprocessContext:
         with self._lock:
             if key in self._state:
                 del self._state[key]
+
+    def terminate(self, remark):
+        self.signal = 'terminate'
+        self.signal_remark = remark
 
 
 class WorkerContext:
@@ -56,3 +62,6 @@ class WorkerContext:
             routing_key='logs.{}'.format(severity),
             body=msg
         )
+
+    def terminate(self, remark):
+        self._parent.terminate(remark)

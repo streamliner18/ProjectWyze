@@ -30,8 +30,12 @@ class LambdaProcess(Process):
         self._ch.exchange_declare('egress', type='topic', durable=True)
         self._ch.exchange_declare('ingress', type='topic', durable=True)
 
+    def deactivate(self):
+        # TODO: Implement this
+        pass
+
     def run(self, **kwargs):
-        print('Lambda {} is booting up.'.format(self.data['name']))
+        print('[L - {}] Lambda booting up.'.format(self.data['name']))
         self.compile_code(self.data['code'])
         self.prepare_queue()
         make_thread = lambda: WorkerThread(
@@ -48,6 +52,13 @@ class LambdaProcess(Process):
         for i in threads:
             i.start()
         while True:
+            if self.context.signal == 'terminate':
+                print('[L - {}] Received kill signal, because {}'.format(
+                    self.data['name'],
+                    self.context.signal_remark
+                ))
+                self.deactivate()
+                raise Exception(self.context.signal_remark)
             for i in threads:
                 if i.is_alive():
                     i.join(0.5)

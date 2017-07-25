@@ -22,7 +22,7 @@ class WorkerThread(Thread):
             # Report the fucking error
             print('[{}]: {} has error: {}'.format(self.props['name'], self.name, e.__repr__()))
             if not self.props['durable']:
-                self.terminate()
+                self.terminate(e.__repr__())
 
     def setup_connection(self):
         # First, set up a connection to the queue
@@ -52,6 +52,7 @@ class WorkerThread(Thread):
         except Exception as e:
             print('[{}] {} Internal error: {}'.format(self.props['name'], self.name, e.__repr__()))
 
-    def terminate(self):
+    def terminate(self, reason):
+        self.context.terminate(reason)
         self._ch.stop_consuming()
         self._conn.close()
