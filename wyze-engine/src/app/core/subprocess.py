@@ -6,7 +6,7 @@ from uuid import uuid4
 
 
 class LambdaProcess(Process):
-    def __init__(self, data, **kwargs):
+    def __init__(self, data):
         super().__init__()
         self._conn, self._ch = None, None
         self.context = SubprocessContext()
@@ -35,7 +35,7 @@ class LambdaProcess(Process):
         pass
 
     def run(self, **kwargs):
-        print('[L - {}] Lambda booting up.'.format(self.data['name']))
+        print('[{}] PROCESS booting up.'.format(self.data['name']))
         self.compile_code(self.data['code'])
         self.prepare_queue()
         make_thread = lambda: WorkerThread(
@@ -53,7 +53,7 @@ class LambdaProcess(Process):
             i.start()
         while True:
             if self.context.signal == 'terminate':
-                print('[L - {}] Received kill signal, because {}'.format(
+                print('[{}] PROCESS Received kill signal, because {}'.format(
                     self.data['name'],
                     self.context.signal_remark
                 ))
@@ -63,7 +63,10 @@ class LambdaProcess(Process):
                 if i.is_alive():
                     i.join(0.5)
                 else:
-                    print('{} has died: Restarting.'.format(i.name))
+                    print('[{}] PROCESS {} has died: Restarting.'.format(
+                        self.data['name'],
+                        i.name
+                    ))
                     threads.remove(i)
                     new_thr = make_thread()
                     threads.append(new_thr)

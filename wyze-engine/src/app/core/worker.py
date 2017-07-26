@@ -20,7 +20,7 @@ class WorkerThread(Thread):
             channel.basic_ack(delivery_tag=methods.delivery_tag)
         except Exception as e:
             # Report the fucking error
-            print('[{}]: {} has error: {}'.format(self.props['name'], self.name, e.__repr__()))
+            print('[{}] {} has error: {}'.format(self.props['name'], self.name, e.__repr__()))
             if not self.props['durable']:
                 self.terminate(e.__repr__())
 
@@ -29,7 +29,7 @@ class WorkerThread(Thread):
         self._conn, self._ch = make_connection()
         # self._ch.add_on_close_callback(self.setup_connection)
         self.context.set_channel(self._ch)
-        print('[{}]: Warming up on queue {}'.format(self.props['name'], self._queue))
+        print('[{}] {} Warming up on queue {}'.format(self.props['name'], self.name, self._queue))
         # Now let's start setting up consumers
         self._ch.queue_declare(self._queue, auto_delete=True)
         bind_target = 'egress' if self.props['recursive'] else 'ingress'
@@ -47,7 +47,7 @@ class WorkerThread(Thread):
             # Now to run the stuff
             if self.init_func is not None:
                 self.init_func(self.context)
-            print('[{}]: {} is up.'.format(self.props['name'], self.name))
+            print('[{}] {} is now alive.'.format(self.props['name'], self.name))
             self._ch.start_consuming()
         except Exception as e:
             print('[{}] {} Internal error: {}'.format(self.props['name'], self.name, e.__repr__()))
