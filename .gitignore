@@ -164,3 +164,7 @@ ENV/
 /site
 
 # End of https://www.gitignore.io/api/python,pycharm
+mgnt-console/src/app/static/asset-manifest.json
+mgnt-console/src/app/templates/index.html
+mgnt-console/src/app/static/index.html
+mgnt-console/src/app/static/service-worker.js
