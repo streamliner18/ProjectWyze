@@ -13,6 +13,7 @@ def add_lambda(user_id):
 def update_lambda(data):
     db = app_mongo.db
     data['_id'] = ObjectId(data['_id'])
+    data['workers'] = int(data.get('workers', 1))
     db.lambdas.replace_one({'_id': data['_id']}, data)
 
 
