@@ -1,6 +1,7 @@
 from . import *
 from bson.objectid import ObjectId
 from .seeds import empty_lambda
+from .remote import RCLambda
 
 
 def add_lambda(user_id):
@@ -15,6 +16,7 @@ def update_lambda(data):
     data['_id'] = ObjectId(data['_id'])
     data['workers'] = int(data.get('workers', 1))
     db.lambdas.replace_one({'_id': data['_id']}, data)
+    RCLambda.reload(str(data['_id']))
 
 
 def get_lambda(_id):
