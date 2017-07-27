@@ -29,7 +29,7 @@ def send_internal_signal(target, command, **kwargs):
         kwargs['command'] = command
         ch.basic_publish(
             exchange='wyze_internal',
-            routing_key='ctrl.'+target,
+            routing_key='ctrl.' + target,
             body=dumps(kwargs)
         )
 
