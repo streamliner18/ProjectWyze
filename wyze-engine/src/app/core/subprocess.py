@@ -3,6 +3,7 @@ from .context import SubprocessContext
 from ..drivers.amq import make_connection
 from .worker import WorkerThread
 from uuid import uuid4
+from simplejson import dumps
 
 
 class LambdaProcess(Process):
@@ -29,14 +30,30 @@ class LambdaProcess(Process):
         self._queue = str(uuid4())
         self._ch.exchange_declare('egress', type='topic', durable=True)
         self._ch.exchange_declare('ingress', type='topic', durable=True)
+        self._conn.close()
 
-    def deactivate(self):
-        # TODO: Implement this
-        pass
+    def deactivate(self, reason):
+        self._conn, self._ch = make_connection()
+        if self.data:
+            compliant = {
+                'command': 'deactivate',
+                '_id': self.data['_id'],
+                'reason': reason
+            }
+            self._ch.basic_publish(
+                'wyze_internal',
+                routing_key='ctrl.engine',
+                body=dumps(compliant)
+            )
 
     def run(self, **kwargs):
         print('[{}] PROCESS booting up.'.format(self.data['name']))
-        self.compile_code(self.data['code'])
+        try:
+            self.compile_code(self.data['code'])
+        except Exception as e:
+            print('[{}] PROCESS compilation error: {}'.format(self.data['name'], e.__str__()))
+            self.deactivate(e.__str__() if e.__str__() else e.__repr__())
+            return
         self.prepare_queue()
         make_thread = lambda: WorkerThread(
             self.init_func,

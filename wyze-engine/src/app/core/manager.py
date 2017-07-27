@@ -25,8 +25,9 @@ class EngineManager:
             process.terminate()
 
     def reload_lambda(self, _id):
-        print('[MAIN] Terminating Lambda {}'.format(self.lambdas[_id]['name']))
         l = get_lambda(_id)
+        if _id in self.lambdas:
+            print('[MAIN] Terminating Lambda {}'.format(self.lambdas[_id]['name']))
         self.kill_lambda(_id)
         if l:
             self.lambdas[_id] = l
@@ -35,6 +36,7 @@ class EngineManager:
             self.lambdas.pop(_id, None)
 
     def deactivate_lambda(self, _id, reason):
+        print('[MAIN] Deactivating lambda {} due to {}'.format(_id, reason))
         deactivate_lambda(_id, reason)
         self.reload_lambda(_id)  # Kill and Remove
 
