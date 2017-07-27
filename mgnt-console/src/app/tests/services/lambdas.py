@@ -35,6 +35,7 @@ class TestLambdas(TestCase):
         l1_id = add_lambda('user1')
         l1 = get_lambda(l1_id)
         l1['active'] = True
+        l1['workers'] = '4'
         update_lambda(l1)
         # Make sure there's only one
         self.assertEqual(mongo.db.lambdas.find().count(), 1)
@@ -43,6 +44,7 @@ class TestLambdas(TestCase):
         self.assertIsNotNone(l1)
         # Make sure the change has taken place
         self.assertEqual(l1['active'], True)
+        self.assertEqual(l1['workers'], 4)
 
     def test_list_lambdas(self):
         l1_id = add_lambda('user1')
