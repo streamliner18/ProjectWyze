@@ -15,13 +15,14 @@ def fetch_active_lambdas(**kwargs):
 def get_lambda(_id, **kwargs):
     data = db.find_one(ObjectId(_id))
     if data and data['active']:
+        data['_id'] = str(data['_id'])
         return data
     return None
 
 
 def deactivate_lambda(_id, reason, **kwargs):
     db.update_one(
-        ObjectId(_id),
+        {'_id': ObjectId(_id)},
         {'$set': {
             'active': False,
             'remarks': reason

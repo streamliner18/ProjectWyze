@@ -7,6 +7,7 @@ class RemoteControl:
         self.conn, self.ch = None, None
         self.command_dict = {}
         self.setup_conn()
+        self.q = ''
 
     def register_command(self, command, func):
         self.command_dict[command] = func
@@ -16,11 +17,11 @@ class RemoteControl:
         self.ch.exchange_declare(
             'wyze_internal',
             exchange_type='topic',
-            durable=False
+            durable=True
         )
         self.q = self.ch.queue_declare(exclusive=True).method.queue
         self.ch.queue_bind(self.q, 'wyze_internal', 'ctrl.engine')
-        self.ch.basic_consume(self.amq_rc_callback, self.q, no_ack=True)
+        self.ch.basic_consume(self.amq_rc_callback, self.q, no_ack=False)
 
     def amq_rc_callback(self, ch, methods, props, body):
         """
@@ -31,6 +32,7 @@ class RemoteControl:
         """
         d = loads(body)
         command = d.pop('command')
+        print('[MAIN] RC received command: ' + command)
         try:
             self.command_dict[command](**d)
         except KeyError:
