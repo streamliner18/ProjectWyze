@@ -85,18 +85,22 @@ export class LambdaEdit extends Component {
   }
 
   onSubmit (e) {
-    this.setState({updating: true})
-    fetch('/api/lambdas/update', {
-      method: 'post',
-      headers: signedJSONHeader(),
-      body: JSON.stringify(this.state.data)
-    }).then(fetchJSON)
-      .then(json => {
-        if (json.status === 'ok') this.setState({
-          modified: false,
-          updating: false
+    this.setState({
+      updating: true,
+      data: update(this.state.data, {remarks: {$set: ''}})
+    }, () =>
+      fetch('/api/lambdas/update', {
+        method: 'post',
+        headers: signedJSONHeader(),
+        body: JSON.stringify(this.state.data)
+      }).then(fetchJSON)
+        .then(json => {
+          if (json.status === 'ok') this.setState({
+            modified: false,
+            updating: false
+          })
         })
-      })
+    )
   }
 
   componentWillMount () {
