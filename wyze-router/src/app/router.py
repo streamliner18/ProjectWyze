@@ -1,38 +1,52 @@
 from multiprocessing import Process
 from multiprocessing import cpu_count
-from .amq.driver import make_connection
-from .amq.pipelines import setup_pipelines
-from .amq.processing import mqtt_cb, amqp_cb
+from .core.driver import make_connection
+from .core.pipelines import setup_exchanges, setup_routes
+from .core.mapper import MQTTMapper
 
 
 class RouterThread(Process):
-    def __init__(self, amqp_q, mqtt_q):
+    def __init__(self, routes):
         super(RouterThread, self).__init__()
         self.conn, self.ch = None, None
-        self.amqp_q = amqp_q
-        self.mqtt_q = mqtt_q
+        self.mapper = MQTTMapper()
+        self.routes = routes
+
+    def wrapped_routing(self, route):
+        def _wrapped(ch, method, props, body):
+            return self.routes[route]['callback'](
+                self.mapper, ch, method, props, body
+            )
+        return _wrapped
+
+    def bind_routes(self):
+        print('{} spooling up on {} routes...'.format(self.name, len(self.routes)))
+        for k, v in self.routes.items():
+            self.ch.basic_consume(
+                self.wrapped_routing(k),
+                queue=v['queue'],
+                no_ack=True
+            )
 
     def run(self):
+        self.mapper.begin()
         self.conn, self.ch = make_connection()
-        self.ch.basic_consume(mqtt_cb, queue=self.mqtt_q, no_ack=True)
-        self.ch.basic_consume(amqp_cb, queue=self.amqp_q, no_ack=True)
+        self.bind_routes()
         self.ch.start_consuming()
-
-    def terminate(self):
-        self.conn.close()
 
 
 class Router:
     def __init__(self):
         self.conn, self.ch = None, None
-        self.mqtt_q, self.amqp_q = '', ''
+        self.routes = {}
 
     def run(self):
         self.conn, self.ch = make_connection()
-        self.mqtt_q, self.amqp_q = setup_pipelines(self.ch)
+        setup_exchanges(self.ch)
+        self.routes = setup_routes(self.ch)
         # Pipeline setup complete, start spawning everything
         threads = [
-            RouterThread(self.amqp_q, self.mqtt_q)
+            RouterThread(self.routes)
             for _ in range(cpu_count())
             ]
         try:
@@ -46,7 +60,7 @@ class Router:
                     else:
                         print('{} has died, restarting'.format(i.name))
                         threads.remove(i)
-                        new_thr = RouterThread(self.amqp_q, self.mqtt_q)
+                        new_thr = RouterThread(self.routes)
                         threads.append(new_thr)
                         new_thr.start()
                         new_thr.join(0.5)
