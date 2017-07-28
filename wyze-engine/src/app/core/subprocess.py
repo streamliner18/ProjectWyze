@@ -30,6 +30,7 @@ class LambdaProcess(Process):
         self._queue = str(uuid4())
         self._ch.exchange_declare('egress', type='topic', durable=True)
         self._ch.exchange_declare('ingress', type='topic', durable=True)
+        self._ch.exchange_declare('outgoing', type='topic', durable=True)
         self._conn.close()
 
     def deactivate(self, reason):

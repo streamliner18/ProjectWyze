@@ -1,6 +1,7 @@
 from threading import Thread
 from ..drivers.amq import make_connection
 from .context import WorkerContext
+from simplejson import loads
 
 
 class WorkerThread(Thread):
@@ -16,7 +17,11 @@ class WorkerThread(Thread):
 
     def callback_handler(self, channel, methods, props, body):
         try:
-            self.handle_func(body, self.context)
+            try:
+                b = loads(body)
+            except Exception:
+                b = body
+            self.handle_func(b, self.context)
             channel.basic_ack(delivery_tag=methods.delivery_tag)
         except Exception as e:
             # Report the fucking error

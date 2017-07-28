@@ -47,7 +47,7 @@ class WorkerContext:
 
     def emit(self, topic, body, persistent=False):
         self._channel.basic_publish(
-            exchange='egress',
+            exchange='outgoing',
             routing_key=topic,
             body=body,
             properties=BasicProperties(
@@ -57,7 +57,7 @@ class WorkerContext:
 
     def log(self, msg, severity):
         self._channel.basic_publish(
-            exchange='wyze_logging',
+            exchange='outgoing',
             # TODO: Put more info in log topics
             routing_key='logs.{}'.format(severity),
             body=msg
