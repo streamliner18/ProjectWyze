@@ -75,7 +75,7 @@ class LambdaProcess(Process):
                     self.data['name'],
                     self.context.signal_remark
                 ))
-                self.deactivate()
+                self.deactivate(self.context.signal_remark)
                 raise Exception(self.context.signal_remark)
             for i in threads:
                 if i.is_alive():
