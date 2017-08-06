@@ -38,3 +38,32 @@ def list_lambdas():
 def delete_lambda(_id):
     db = app_mongo.db
     db.lambdas.delete_one({'_id': ObjectId(_id)})
+
+
+def count_lambdas():
+    db = app_mongo.db
+    c_total = db.lambdas.find().count()
+    c_active = db.lambdas.find({'active': True}).count()
+    return {
+        'total': c_total,
+        'active': c_active,
+        'active_ratio': int(c_active / c_total * 100)
+    }
+
+
+def count_lambda_load():
+    lambdas = list_lambdas()
+    c_active, c_total = 0, 0
+    for i in lambdas:
+        if i.get('bind_multithreaded'):
+            incr = i['workers'] * (len(i['bindings']) + 1)
+        else:
+            incr = i['workers']
+        c_total += incr
+        if i['active']:
+            c_active += incr
+    return {
+        'active': c_active,
+        'total': c_total,
+        'active_ratio': int(c_active / c_total * 100)
+    }
