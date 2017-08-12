@@ -1,7 +1,7 @@
 import simplejson as json
 from os import environ
 from uuid import uuid1
-from base64 import encodebytes
+from base64 import encodebytes, decodebytes
 
 DEBUG = environ.get('DEBUG', False)
 
@@ -18,6 +18,18 @@ def to_object(body):
         except Exception:
             return {"value": encodebytes(body), 'decoder': 'base64'}
 
+
+def from_object(body):
+    try:
+        body = json.loads(body)
+        assert 'value' in body
+        msg_type = body['decoder']
+        if msg_type == 'base64':
+            return decodebytes(body['value'].encode('utf-8'))
+        elif msg_type == 'utf-8':
+            return body['value'].encode('utf-8')
+    except Exception:
+        return body
 
 def stamp_tag(body, key, prop):
     body = to_object(body)
