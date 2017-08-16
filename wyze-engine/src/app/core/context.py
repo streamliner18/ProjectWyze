@@ -1,5 +1,26 @@
 from threading import RLock
 from pika import BasicProperties
+import simplejson as json
+from base64 import encodebytes
+
+
+def to_object(body):
+    if not (isinstance(body, str) or isinstance(body, bytes)):
+        b = str(body)
+    else:
+        b = body
+    try:
+        body = json.loads(b)
+        assert isinstance(body, dict)
+        body['decoder'] = 'json'
+        return body
+    except Exception:
+        try:
+            if isinstance(b, bytes):
+                b = b.decode('utf-8')
+            return {'value': b, 'decoder': 'utf-8'}
+        except Exception:
+            return {"value": encodebytes(b), 'decoder': 'base64'}
 
 
 class SubprocessContext:
@@ -46,10 +67,11 @@ class WorkerContext:
         return self._parent.unset_state(*args, **kwargs)
 
     def emit(self, topic, body, persistent=False):
+        body = to_object(body)
         self._channel.basic_publish(
             exchange='outgoing',
             routing_key=topic,
-            body=body,
+            body=json.dumps(body),
             properties=BasicProperties(
                 delivery_mode=(2 if persistent else None)
             )

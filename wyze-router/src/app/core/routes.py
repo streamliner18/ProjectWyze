@@ -1,4 +1,4 @@
-from .processing import stamp_tag
+from .processing import stamp_tag, from_object
 
 
 exchanges = ['ingress', 'incoming', 'egress', 'outgoing']
@@ -61,6 +61,7 @@ route_mqtt_emit = {
 
 def cb_mqtt_emit(mapper, ch, method, prop, body):
     try:
+        body = from_object(body)
         k = mapper.translate_out(method.routing_key)
         ch.basic_publish('amq.topic', k, body)
     except KeyError:

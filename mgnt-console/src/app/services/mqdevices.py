@@ -34,5 +34,18 @@ def get_mqdevice(_id):
 
 def delete_mqdevice(_id):
     db = app_mongo.db
-
     db.mqdevices.delete_one({'_id': ObjectId(_id)})
+
+
+def count_mqchannels():
+    data = list_mqdevices()
+    c_input, c_output = 0, 0
+    for i in data:
+        c_input += len(i['channels'])
+        c_output += sum([j['has_input'] for j in i['channels']])
+    return {
+        'inputs': c_input,
+        'outputs': c_output,
+        'output_ratio': int(c_output / c_input * 100)
+    }
+

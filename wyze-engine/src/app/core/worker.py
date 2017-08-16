@@ -2,6 +2,7 @@ from threading import Thread
 from ..drivers.amq import make_connection
 from .context import WorkerContext
 from simplejson import loads
+from base64 import decodebytes
 
 
 class WorkerThread(Thread):
@@ -19,6 +20,10 @@ class WorkerThread(Thread):
         try:
             try:
                 b = loads(body)
+                if b.get('decoder') == 'base64':
+                    b['value'] = decodebytes(b['value'].encode('utf-8'))
+                elif b.get('decoder') == 'utf-8':
+                    b['value'] = b['value'].encode('utf-8')
             except Exception:
                 b = body
             self.handle_func(b, self.context)
