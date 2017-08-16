@@ -16,7 +16,7 @@ Also, special thanks to these friends for support and inspirations:
 
 - **(Ethan) Luo Yicheng** (@ethanluoyc) M.Eng CS, Imperial College London
 - **Professor Christopher D. Schmitz** (@cdschmit), ECE @ University of Illinois at Urbana-Champaign
-- **Yichi Zhang** B.E. Finantial Engineering, Wuhan University
+- **Yichi Zhang** B.E. Financial Engineering, Wuhan University
 - **Bo Ma** former Tech Coach, Baidu Inc
 
 ## Plug-n-Play
