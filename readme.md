@@ -1,14 +1,21 @@
 # Project Wyze
 
-Project Wyze is a general-purpose data exchange and processing system intended for transporting large amounts of streaming data through an entirely programmable pipeline, and providing endpoints to stream the processed data out at real-time, as well as capabilities to playback the timeline like a YouTube livestream.
+**Project Wyze** is the Segway of real-time data processing with the power of a Ferrari. It lets you focus on what you **want** to do with the **data itself**, and forget about scheduling, managing the stream and handling failures. Write minimal code and enjoy instant gratification with a convenience you could only find on custom-built proprietary systems, while having freedom of customizing all you want.
+
+Named after [Principality of Wy](http://principalityofwy.com/), Project Wyze is an intuitive *un-framework*. Stream in the data, and you have the ability of *looking back* out of the box. Design your own visualizations and playback your analytics on a timeline like a YouTube livestream (coming soon). It is also a polyglot supporting both AMQP and MQTT endpoints. 
 
 ## Credits
 
-Project Wyze is a collective effort of Jimmy He and Sasan Erfan at the University of Illinois at Urbana-Champaign.
+Project Wyze is a collective effort of Jimmy He (@streamliner18) and Sasan Erfan (@sasma) at the University of Illinois at Urbana-Champaign.
 
 Project Wyze is powered by RabbitMQ and Apache Kafka. The architecture draws inspirations from [Apache Storm](http://storm.apache.org), [Apache Spark](https://spark.apache.org), and is partially derived from Jimmy He's [patent](https://www.google.com/patents/CN104239505B?cl=en) (CN 104239505 B) as well as Ricequant's Open Source [RQAlpha financial backtest engine](https://github.com/ricequant/rqalpha).
 
-Special thanks to Ethan Luo Yicheng at Imperial College London, Professor Christopher D. Schmitz at the University of Illinois at Urbana-Champaign and Yichi Zhang at Wuhan University for support and inspirations.
+Also, special thanks to these friends for support and inspirations: 
+
+- **(Ethan) Luo Yicheng** (@ethanluoyc) M.Eng CS, Imperial College London
+- **Professor Christopher D. Schmitz** (@cdschmit), ECE @ University of Illinois at Urbana-Champaign
+- **Yichi Zhang** B.E. Finantial Engineering, Wuhan University
+- **Bo Ma** former Tech Coach, Baidu Inc
 
 ## Plug-n-Play
 
