@@ -15,4 +15,4 @@ def get_redis_address():
 
 
 def get_n_of_threads():
-    return int(environ.get('THREADS')) or cpu_count()
+    return int(environ.get('THREADS') or cpu_count())
