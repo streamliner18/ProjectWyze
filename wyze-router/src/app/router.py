@@ -3,7 +3,7 @@ from multiprocessing import cpu_count
 from .core.driver import make_connection
 from .core.pipelines import setup_exchanges, setup_routes
 from .core.mapper import MQTTMapper
-from pika.exceptions import ChannelClosed
+from pika.exceptions import ChannelClosed, ConnectionClosed
 from .config.env_conf import get_redis_address, get_n_of_threads
 from redis import StrictRedis
 
@@ -73,4 +73,7 @@ class Router:
             for i in threads:
                 if i.is_alive():
                     i.terminate()
-            self.conn.close()
+            try:
+                self.conn.close()
+            except ConnectionClosed:
+                pass
