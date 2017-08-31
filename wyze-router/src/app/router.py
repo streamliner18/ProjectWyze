@@ -67,6 +67,7 @@ class Router:
                         threads.remove(i)
                         new_thr = RouterThread(self.routes)
                         threads.append(new_thr)
+                        new_thr.daemon = True
                         new_thr.start()
                         new_thr.join(0.5)
         except KeyboardInterrupt:
