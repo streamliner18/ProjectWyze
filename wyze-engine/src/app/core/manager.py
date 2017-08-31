@@ -16,6 +16,7 @@ class EngineManager:
         self.processes[_id] = LambdaProcess(
             data=self.lambdas[_id]
         )
+        self.processes[_id].daemon = True
         self.processes[_id].start()
         print('[MAIN] Starting Lambda {}'.format(self.lambdas[_id]['name']))
 

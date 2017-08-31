@@ -9,7 +9,8 @@ DEBUG = environ.get('DEBUG', False)
 def to_object(body):
     try:
         body = json.loads(body)
-        assert isinstance(body, dict)
+        if not isinstance(body, dict):
+            body = {'value': body}
         body['decoder'] = 'json'
         return body
     except Exception:
@@ -28,8 +29,10 @@ def from_object(body):
             return decodebytes(body['value'].encode('utf-8'))
         elif msg_type == 'utf-8':
             return body['value'].encode('utf-8')
+        return body
     except Exception:
         return body
+
 
 def stamp_tag(body, key, prop):
     body = to_object(body)
