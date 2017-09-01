@@ -10,11 +10,11 @@ services:
         volumes:
             - /tmp/docker/rabbit:/tmp/docker/rabbit
     mongo:
-        build: mongodb:latest
+        image: mongo:latest
         ports:
             - "27017:27017"
     redis:
-        build: redis:latest
+        image: redis:latest
         ports:
             - "6379:6379"
     router:
