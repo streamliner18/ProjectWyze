@@ -14,7 +14,7 @@ def make_connection():
 
 
 def cb(ch, methods, props, body):
-    print(body)
+    print('[{}]: {}'.format(methods.routing_key, body))
 
 
 @command()
