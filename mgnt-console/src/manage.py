@@ -7,10 +7,10 @@ manager = Manager(app)
 
 @manager.command
 def init():
-    print('Initializing database. The old db will be wiped.')
+    print('Initializing database.')
     seeds.build_database()
-    seeds.initial_database_seed()
-    print('Init complete. Create admin account using invitation ID "root"')
+    if seeds.initial_database_seed():
+        print('Init complete. Create admin account using invitation ID "root"')
 
 
 if __name__ == "__main__":

@@ -34,9 +34,11 @@ def initial_database_seed(force=False):
     db = app_mongo.db
     config_item = db['config'].find_one({'key': 'init_seed'})
     if config_item and not force:
-        raise Exception('The database has been seeded before, aborting.')
+        print('The database has been seeded before, aborting.')
+        return False
     db.drop_collection('users')
     db.users.insert_one({
         'invite_id': 'root',
         'role': 'admin'
     })
+    db.config.insert_one({'key': 'init_seed', 'value': True})

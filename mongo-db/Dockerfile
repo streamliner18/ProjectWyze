@@ -1,3 +1,0 @@
-FROM mongo
-
-MAINTAINER Project Wyze Team
