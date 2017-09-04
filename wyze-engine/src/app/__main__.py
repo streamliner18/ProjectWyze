@@ -1,4 +1,4 @@
-from app.core.manager import EngineManager
+from .core.manager import EngineManager
 
 
 def main():
