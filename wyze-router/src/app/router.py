@@ -26,6 +26,7 @@ class RouterThread(Process):
     def bind_routes(self):
         print('{} spooling up on {} routes...'.format(self.name, len(self.routes)))
         for k, v in self.routes.items():
+            self.ch.queue_declare(auto_delete=True, queue=v['queue'])
             self.ch.basic_consume(
                 self.wrapped_routing(k),
                 queue=v['queue'],
