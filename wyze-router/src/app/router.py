@@ -6,6 +6,7 @@ from .core.mapper import MQTTMapper
 from pika.exceptions import ChannelClosed, ConnectionClosed
 from .config.env_conf import get_redis_address, get_n_of_threads
 from redis import StrictRedis
+from time import sleep
 
 
 class RouterThread(Process):
@@ -34,11 +35,14 @@ class RouterThread(Process):
             )
 
     def run(self):
-        self.mapper.begin()
-        self.conn, self.ch = make_connection()
-        self.redis = StrictRedis(get_redis_address())
-        self.bind_routes()
-        self.ch.start_consuming()
+        try:
+            self.mapper.begin()
+            self.conn, self.ch = make_connection()
+            self.redis = StrictRedis(get_redis_address())
+            self.bind_routes()
+            self.ch.start_consuming()
+        except Exception as e:
+            print("Fatal: {}".format(e.__repr__()))
 
 
 class Router:
@@ -66,6 +70,7 @@ class Router:
                     else:
                         print('{} has died, restarting'.format(i.name))
                         threads.remove(i)
+                        sleep(0.5)
                         new_thr = RouterThread(self.routes)
                         threads.append(new_thr)
                         new_thr.daemon = True
