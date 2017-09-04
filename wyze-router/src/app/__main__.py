@@ -1,4 +1,4 @@
-from app.router import Router
+from .router import Router
 
 
 if __name__ == '__main__':
