@@ -20,7 +20,7 @@ def on_message(client, userdata, msg):
 
 
 def setup_client():
-
+    client.username_pw_set('guest', 'guest')
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(address, 1883, 60)
