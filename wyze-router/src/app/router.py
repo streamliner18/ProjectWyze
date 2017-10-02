@@ -15,6 +15,7 @@ class RouterThread(Process):
         self.conn, self.ch = None, None
         self.redis = None
         self.mapper = MQTTMapper()
+        self.remote_q = None
         self.routes = routes
 
     def wrapped_routing(self, route):
@@ -34,12 +35,31 @@ class RouterThread(Process):
                 no_ack=True
             )
 
+    def setup_autoreload(self):
+        def reload(c, m, p, b):
+            print('{} reloading mapper'.format(self.name))
+            self.mapper.begin()
+
+        self.ch.exchange_declare(
+            'wyze_internal',
+            exchange_type='topic',
+            durable=True
+        )
+        self.remote_q = self.ch.queue_declare(exclusive=True).method.queue
+        self.ch.queue_bind(self.remote_q, 'wyze_internal', 'ctrl.router')
+        self.ch.basic_consume(
+            reload,
+            queue=self.remote_q,
+            no_ack=True
+        )
+
     def run(self):
         try:
             self.mapper.begin()
             self.conn, self.ch = make_connection()
             self.redis = StrictRedis(get_redis_address())
             self.bind_routes()
+            self.setup_autoreload()
             self.ch.start_consuming()
         except Exception as e:
             print("Fatal: {}".format(e.__repr__()))
