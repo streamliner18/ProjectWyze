@@ -1,6 +1,7 @@
 from . import *
 from bson.objectid import ObjectId
 from datetime import datetime
+from .remote import RCRouter
 
 
 def update_mqtemplate(data, user_id):
@@ -38,6 +39,7 @@ def update_mqdevices(_id):
     assert data
     extracted = {k: data[k] for k in 'channels input_key output_key'.split()}
     db.mqdevices.update_many({'base_template': _id}, {'$set': extracted})
+    RCRouter.reload()
 
 
 def delete_mqtemplate(_id):

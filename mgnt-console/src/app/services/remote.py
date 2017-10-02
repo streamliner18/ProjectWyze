@@ -38,3 +38,9 @@ class RCLambda:
     @classmethod
     def reload(cls, _id):
         send_internal_signal('engine', 'reload', _id=_id)
+
+
+class RCRouter:
+    @classmethod
+    def reload(cls):
+        send_internal_signal('router', 'reload')
