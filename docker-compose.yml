@@ -11,12 +11,11 @@ services:
             - /tmp/docker/rabbit:/tmp/docker/rabbit
     mongo:
         image: mongo:latest
-        ports:
-            - "27017:27017"
+        volumes:
+            - /data/db:/tmp/docker/data/db
+            - /data/configdb:/tmp/docker/data/configdb
     redis:
         image: redis:latest
-        ports:
-            - "6379:6379"
     router:
         build: ./wyze-router
         links:
