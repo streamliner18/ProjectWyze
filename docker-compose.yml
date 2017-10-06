@@ -8,12 +8,12 @@ services:
             - "5672:5672"
             - "1883:1883"
         volumes:
-            - /tmp/docker/rabbit:/tmp/docker/rabbit
+            - /var/docker/rabbit:/tmp/docker/rabbit
     mongo:
         image: mongo:latest
         volumes:
-            - /tmp/docker/data/db:/data/db
-            - /tmp/docker/data/configdb:/data/configdb
+            - /var/docker/data/db:/data/db
+            - /var/docker/data/configdb:/data/configdb
     redis:
         image: redis:latest
     router:
