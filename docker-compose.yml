@@ -12,8 +12,8 @@ services:
     mongo:
         image: mongo:latest
         volumes:
-            - /data/db:/tmp/docker/data/db
-            - /data/configdb:/tmp/docker/data/configdb
+            - /tmp/docker/data/db:/data/db
+            - /tmp/docker/data/configdb:/data/configdb
     redis:
         image: redis:latest
     router:
