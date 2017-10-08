@@ -2,7 +2,7 @@ from os import environ
 
 
 def get_broker_address():
-    return environ.get('BROKER_ADDRESS') or 'localhost'
+    return environ.get('RABBIT_URL') or 'amqp://localhost/'
 
 
 def get_mongo_address():

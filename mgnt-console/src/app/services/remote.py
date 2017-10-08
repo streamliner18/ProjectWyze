@@ -1,17 +1,17 @@
-from pika import BlockingConnection, ConnectionParameters
+from pika import BlockingConnection, URLParameters
 from os import environ
 from contextlib import contextmanager
 from simplejson import dumps
 
 
 def get_broker_address():
-    return environ.get('BROKER_ADDRESS') or 'localhost'
+    return environ.get('RABBIT_URL') or 'amqp://localhost/'
 
 
 @contextmanager
 def amq_channel(exchange):
     conn = BlockingConnection(
-        ConnectionParameters(get_broker_address())
+        URLParameters(get_broker_address())
     )
     ch = conn.channel()
     ch.confirm_delivery()

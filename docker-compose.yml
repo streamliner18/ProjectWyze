@@ -24,9 +24,10 @@ services:
             - mongo
             - redis
         environment:
-            - BROKER_ADDRESS=rabbit
             - MONGO_URL=mongodb://mongo:27017/wyze
             - REDIS_ADDRESS=redis
+        env_file: 
+            - .env
     engine:
         build: ./wyze-engine
         links:
@@ -34,9 +35,10 @@ services:
             - mongo
             - redis
         environment:
-            - BROKER_ADDRESS=rabbit
             - MONGO_URL=mongodb://mongo:27017/wyze
             - REDIS_ADDRESS=redis
+        env_file:
+            - .env
     console:
         build: ./mgnt-console
         links:
@@ -44,8 +46,9 @@ services:
             - mongo
             - redis
         environment:
-            - BROKER_ADDRESS=rabbit
             - MONGO_URL=mongodb://mongo:27017/wyze
             - REDIS_ADDRESS=redis
         ports:
             - "5000:5000"
+        env_file:
+            - .env
