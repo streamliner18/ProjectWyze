@@ -10,7 +10,7 @@ def on_channel_open(channel):
 def make_connection():
     address = get_broker_address()
     # print('RabbitMQ address: {}'.format(address))
-    connection = pika.BlockingConnection(pika.ConnectionParameters(address))
+    connection = pika.BlockingConnection(pika.URLParameters(address))
     ch = connection.channel()
     ch.confirm_delivery()
     return connection, ch
