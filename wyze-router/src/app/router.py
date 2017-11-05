@@ -1,10 +1,11 @@
 from multiprocessing import Process
 from multiprocessing import cpu_count
-from .core.driver import make_connection
+
 from .core.pipelines import setup_exchanges, setup_routes
 from .core.mapper import MQTTMapper
 from pika.exceptions import ChannelClosed, ConnectionClosed
-from .config.env_conf import get_redis_address, get_n_of_threads
+from .drivers.rabbitmq import new_rabbitmq_connection
+from .drivers.env_conf import get_redis_address, get_n_of_threads
 from redis import StrictRedis
 from time import sleep
 
@@ -14,6 +15,7 @@ class RouterThread(Process):
         super(RouterThread, self).__init__()
         self.conn, self.ch = None, None
         self.redis = None
+        self.db = None
         self.mapper = MQTTMapper()
         self.remote_q = None
         self.routes = routes
@@ -56,7 +58,7 @@ class RouterThread(Process):
     def run(self):
         try:
             self.mapper.begin()
-            self.conn, self.ch = make_connection()
+            self.conn, self.ch = new_rabbitmq_connection()
             self.redis = StrictRedis(get_redis_address())
             self.bind_routes()
             self.setup_autoreload()
@@ -71,7 +73,7 @@ class Router:
         self.routes = {}
 
     def run(self):
-        self.conn, self.ch = make_connection()
+        self.conn, self.ch = new_rabbitmq_connection()
         setup_exchanges(self.ch)
         self.routes = setup_routes(self.ch)
         # Pipeline setup complete, start spawning everything

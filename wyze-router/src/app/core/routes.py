@@ -1,4 +1,4 @@
-from .processing import stamp_tag, from_object
+from app.core.processing import stamp_tag, from_object
 from time import time
 
 

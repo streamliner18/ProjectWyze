@@ -1,4 +1,4 @@
-from .routes import exchanges, routes
+from app.core.routes import exchanges, routes
 
 
 def setup_exchanges(ch):

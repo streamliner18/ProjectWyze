@@ -1,9 +1,9 @@
 import pika
 
-from ..config.env_conf import get_broker_address
+from app.drivers.env_conf import get_broker_address
 
 
-def make_connection():
+def new_rabbitmq_connection():
     address = get_broker_address()
     conn = pika.BlockingConnection(pika.URLParameters(address))
     ch = conn.channel()

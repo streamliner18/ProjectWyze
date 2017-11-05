@@ -1,4 +1,4 @@
-from ..config.mongo_conf import list_raw_devices
+from ..drivers.mongodb import new_mongodb_connection
 
 
 class MQTTMapper:
@@ -9,9 +9,14 @@ class MQTTMapper:
 
     @staticmethod
     def generate_mappings():
-        devices = list_raw_devices()
+        # Fetch devices from MongoDB
+        client, db = new_mongodb_connection()
+        collection = db.mqdevices
+        devices = list(collection.find({}))
+        client.close()
         inputs = {}
         outputs = {}
+        # Enumerate devices to flatten keys
         for i in devices:
             device_id = i['device_id']
             device_name = i['name']
