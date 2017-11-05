@@ -1,4 +1,5 @@
-from app.core.processing import stamp_tag, from_object
+from app.core.processing import stamp_tag, from_object, to_object
+from simplejson import loads
 from time import time
 
 
@@ -96,10 +97,25 @@ def cb_amq_persist(this, ch, method, prop, body):
         print('Unable to cache message, reason: {}'.format(e.__repr__()))
 
 
+route_amq_store = {
+    'exchange': 'egress',
+    'routing_keys': '#'
+}
+
+
+def cb_amq_store(this, ch, method, prop, body):
+    try:
+        jbody = loads(body)
+        this.db['warehouse'].insert(jbody)
+    except Exception as e:
+        print('Unable to store message, reason: {}'.format(e.__repr__()))
+
+
 routes = {
     'mqtt_ingest': (route_mqtt_ingest, cb_mqtt_ingest),
     'amq_ingest': (route_amq_ingest, cb_amq_ingest),
     'mqtt_emit': (route_mqtt_emit, cb_mqtt_emit),
     'amq_emit': (route_amq_emit, cb_amq_emit),
-    'amq_persist': (route_amq_persist, cb_amq_persist)
+    'amq_persist': (route_amq_persist, cb_amq_persist),
+    'amq_store': (route_amq_store, cb_amq_store)
 }

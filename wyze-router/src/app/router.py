@@ -5,7 +5,8 @@ from .core.pipelines import setup_exchanges, setup_routes
 from .core.mapper import MQTTMapper
 from pika.exceptions import ChannelClosed, ConnectionClosed
 from .drivers.rabbitmq import new_rabbitmq_connection
-from .drivers.env_conf import get_redis_address, get_n_of_threads
+from .drivers.mongodb import new_mongodb_connection
+from .drivers.env_conf import *
 from redis import StrictRedis
 from time import sleep
 
@@ -58,8 +59,13 @@ class RouterThread(Process):
     def run(self):
         try:
             self.mapper.begin()
+            # Set up all extensions
             self.conn, self.ch = new_rabbitmq_connection()
             self.redis = StrictRedis(get_redis_address())
+            _, self.db = new_mongodb_connection()
+            self.db.warehouse.create_index('key')
+            self.db.warehouse.create_index('timestamp')
+            # Initialize pipeline
             self.bind_routes()
             self.setup_autoreload()
             self.ch.start_consuming()
